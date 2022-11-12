@@ -25,40 +25,46 @@ class SignUp : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        binding.button2.setOnClickListener {
+        binding.btnJoin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val pass = binding.etPwd.text.toString()
             val confirmPass = binding.etPwdConfirm.text.toString()
 
-            if(email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()) {
-                if(pass == confirmPass) {
-                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
-                        if(it.isSuccessful) {
+            joinMember(email, pass, confirmPass)
+        }
+    }
 
-                            val firebaseUser = firebaseAuth.currentUser
-                            val account = UserAccount()
-                            account.idToken = firebaseUser?.uid
-                            account.emailId = email
-                            account.password = pass
 
-                            database.child("UserAccount")
-                                .child(firebaseUser?.uid ?: "-1")
-                                .setValue(account)
 
-                            Toast.makeText(this, "Succeed to register the account!", Toast.LENGTH_SHORT).show()
+    private fun joinMember(email: String, pass: String, confirmPass: String) {
+        if(email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()) {
+            if(pass == confirmPass) {
+                firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
+                    if(it.isSuccessful) {
 
-                            val intent = Intent(this, SignIn::class.java)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                        }
+                        val firebaseUser = firebaseAuth.currentUser
+                        val account = UserAccount()
+                        account.idToken = firebaseUser?.uid
+                        account.emailId = email
+                        account.password = pass
+
+                        database.child("UserAccount")
+                            .child(firebaseUser?.uid ?: "-1")
+                            .setValue(account)
+
+                        Toast.makeText(this, "Succeed to register the account!", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this, SignIn::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(this, "Password is not matching", Toast.LENGTH_SHORT).show()
                 }
-            }  else {
-                Toast.makeText(this, "Empty Fields are not allowed !!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Password is not matching", Toast.LENGTH_SHORT).show()
             }
+        }  else {
+            Toast.makeText(this, "Empty Fields are not allowed !!", Toast.LENGTH_SHORT).show()
         }
     }
 }
