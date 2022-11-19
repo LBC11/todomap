@@ -39,11 +39,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         var calendarFragment = CalendarFragment()
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
+        var mapFragment = MapFragment()
+        val fragments = listOf(calendarFragment, mapFragment)
+        val fragmentAdapter = FragmentAdapter(this)
+        fragmentAdapter.fragmentList = fragments
+        binding.viewpager.adapter = fragmentAdapter
 
-        transaction.add(binding.fragmentFrame.id, calendarFragment)
-        transaction.commit()
 
     }
 
