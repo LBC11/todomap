@@ -1,4 +1,4 @@
-package com.example.todomap
+package com.example.todomap.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 
 class TodoViewModel(application: Application): AndroidViewModel(application) {
 
-    private val repository = TodoRepository(application)
+    //private val repository = TodoRepository(application)
     private val _date = MutableLiveData<String>()
     private val _location = MutableLiveData<Location>()
 

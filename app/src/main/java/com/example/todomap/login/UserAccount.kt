@@ -1,4 +1,4 @@
-package com.example.todomap
+package com.example.todomap.login
 
 class UserAccount {
     var idToken: String? = null // firebase user's Uid
