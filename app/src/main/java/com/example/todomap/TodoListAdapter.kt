@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todomap.databinding.TodoitemRecyclerBinding
+import com.example.todomap.retrofit.dto.TodoEntity
 
 class TodoListAdapter: RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
     private val todoList = ArrayList<TodoEntity>()
