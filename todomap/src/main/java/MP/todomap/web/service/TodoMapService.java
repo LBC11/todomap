@@ -18,23 +18,29 @@ public class TodoMapService {
     private final TodoRepository repository;
 
     @Transactional
-    public Long create(TodoCreationDto creationDto) {
-        return repository.save(creationDto.toEntity()).getId();
+    public void create(TodoCreationDto creationDto) {
+        repository.save(creationDto.toEntity());
     }
 
     @Transactional(readOnly = true)
-    public List<TodoReadDto> readByUid(String uid) {
-        return repository.findAllByTodoUid(uid)
+    public List<TodoReadDto> readAllByUid(String uid) {
+        return repository.findAllByUid(uid)
+                .stream().map(TodoReadDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TodoReadDto> readAllByUidAndDate(String uid, String date) {
+        return repository.findAllByUidAndDate(uid, date)
                 .stream().map(TodoReadDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public Long update(Long id, TodoUpdateDto updateDto) {
+    public void update(Long id, TodoUpdateDto updateDto) {
         Todo todo = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("update error!!! id:"+id));
-        todo.update(updateDto.getUid(), updateDto.getTime(), updateDto.getLocation(), updateDto.getBody());
-        return id;
+        todo.update(updateDto.getUid(), updateDto.getDate(), updateDto.getTime(), updateDto.getLocLatitude(), updateDto.getLocLongitude(), updateDto.getDescription());
     }
 
     @Transactional

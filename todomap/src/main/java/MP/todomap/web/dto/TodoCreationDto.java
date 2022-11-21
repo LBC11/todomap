@@ -10,19 +10,23 @@ import lombok.NoArgsConstructor;
 public class TodoCreationDto {
 
     private String uid;
+    private String date;
     private String time;
-    private String location;
-    private String body;
+    private String locLatitude;
+    private String locLongitude;
+    private String description;
 
     @Builder
-    public TodoCreationDto(String uid, String time, String location, String body) {
+    public TodoCreationDto(String uid, String date, String time, String locLatitude, String locLongitude, String description) {
         this.uid = uid;
+        this.date = date;
         this.time = time;
-        this.location = location;
-        this.body = body;
+        this.locLatitude = locLatitude;
+        this.locLongitude = locLongitude;
+        this.description = description;
     }
 
     public Todo toEntity() {
-        return Todo.builder().uid(uid).time(time).location(location).body(body).build();
+        return Todo.builder().uid(uid).date(date).time(time).locLatitude(locLatitude).locLongitude(locLongitude).description(description).build();
     }
 }

@@ -15,30 +15,44 @@ public class Todo {
     @GeneratedValue
     private Long id;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private String uid;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
+    private String date;
+
+    @Column(nullable = false)
     private String time;
 
-    //@Column(nullable = false)
-    private String location;
+    @Column(nullable = false)
+    private String locLatitude;
 
-    //@Column(nullable = false)
-    private String body;
+    @Column(nullable = false)
+    private String locLongitude;
+
+    @Column(nullable = false)
+    private String description;
 
     @Builder
-    public Todo(String uid, String time, String location, String body) {
+    public Todo(String uid, String date, String time,
+                String locLatitude, String locLongitude,
+                String description) {
         this.uid = uid;
+        this.date = date;
         this.time = time;
-        this.location = location;
-        this.body = body;
+        this.locLatitude = locLatitude;
+        this.locLongitude = locLongitude;
+        this.description = description;
     }
 
-    public void update(String uid, String time, String location, String body) {
+    public void update(String uid, String date, String time,
+                       String locLatitude, String locLongitude,
+                       String description) {
         this.uid = uid;
+        this.date = date;
         this.time = time;
-        this.location = location;
-        this.body = body;
+        this.locLatitude = locLatitude;
+        this.locLongitude = locLongitude;
+        this.description = description;
     }
 }
