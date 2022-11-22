@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.todomap.MapFragment
-import com.example.todomap.TodoViewModel
+import com.example.todomap.todo.TodoViewModel
 import com.example.todomap.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference

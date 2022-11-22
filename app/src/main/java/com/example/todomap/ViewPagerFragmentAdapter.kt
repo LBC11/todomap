@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.todomap.profile.UserAccount
 import com.example.todomap.profile.ProfileFragment
+import com.example.todomap.todo.CalendarFragment
 
 class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity, private var uid: String, private var userAccount: UserAccount?): FragmentStateAdapter(fragmentActivity){
 

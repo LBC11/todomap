@@ -1,4 +1,4 @@
-package com.example.todomap
+package com.example.todomap.todo
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,13 +9,13 @@ import com.example.todomap.retrofit.model.TodoEntity
 class TodoListAdapter: RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
     private val todoList = ArrayList<TodoEntity>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context))
 //        return RecyclerView.ViewHolder(binding)
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TodoListAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val todoEntity = todoList[position]
         holder.setTodoListUI(todoEntity,position)
     }

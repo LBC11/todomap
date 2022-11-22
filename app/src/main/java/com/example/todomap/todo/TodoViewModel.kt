@@ -1,4 +1,4 @@
-package com.example.todomap
+package com.example.todomap.todo
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
