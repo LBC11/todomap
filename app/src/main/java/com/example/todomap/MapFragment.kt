@@ -119,6 +119,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         getDeviceLocation();
     }
 
+    private fun addMarker(){
+
+    }
+
     private fun updateLocationUI() {
         if (map == null) {
             return
@@ -227,10 +231,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) locationPermissionGranted = true
-        else ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) locationPermissionGranted = true
+        else ActivityCompat.requestPermissions(context, arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
         locationPermissionGranted = false
         when (requestCode) { PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
@@ -255,10 +260,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onStop() {
         super.onStop()
         mapView!!.onStop()
-        if (fusedLocationProviderClient != null) {
-            Log.d(TAG, "onStop : removeLocationUpdates")
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        }
+        Log.d(TAG, "onStop : removeLocationUpdates")
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() { // 유저에게 Fragment가 보여지고, 유저와 상호작용이 가능하게 되는 부분
@@ -268,8 +271,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.d(TAG, "onResume : requestLocationUpdates")
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
                 shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")
                 permissionLauncher.launch(ACCESS_FINE_LOCATION)
                 return
@@ -291,10 +292,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onDestroyView() { // 프래그먼트와 관련된 View 가 제거되는 단계
         super.onDestroyView()
-        if (fusedLocationProviderClient != null) {
-            Log.d(TAG, "onDestroyView : removeLocationUpdates")
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        }
+        Log.d(TAG, "onDestroyView : removeLocationUpdates")
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onDestroy() {

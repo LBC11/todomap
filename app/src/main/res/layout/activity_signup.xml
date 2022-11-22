@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.SignupActivity">
+    tools:context=".profile.SignupActivity">
 
     <ImageView
         android:id="@+id/logoView2"
@@ -65,7 +65,7 @@
         android:id="@+id/newIdText"
         android:layout_width="268dp"
         android:layout_height="40dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="88dp"
         android:ems="10"
         android:hint="input your email"
         android:inputType="textEmailAddress"

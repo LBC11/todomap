@@ -1,4 +1,4 @@
-package com.example.todomap.login
+package com.example.todomap.profile
 
 import android.app.Activity
 import android.content.Intent
@@ -64,7 +64,10 @@ class SigninActivity : AppCompatActivity() {
         if(email.isNotEmpty() && pass.isNotEmpty()) {
             firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                 if(it.isSuccessful) {
+                    val intent_signup = intent
+
                     val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra("UserAccount", intent_signup.getSerializableExtra("UserAccount") as UserAccount?)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()

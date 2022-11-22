@@ -10,10 +10,10 @@
         android:id="@+id/todoRecyclerView"
         android:layout_width="350dp"
         android:layout_height="196dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/calendarView"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/calendarView" />
 
     <EditText
@@ -23,10 +23,21 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Todo"
-        app:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
         app:layout_constraintEnd_toStartOf="@+id/todoAddBtn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/todoRecyclerView" />
+        app:layout_constraintStart_toStartOf="@+id/todoRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+    <Button
+        android:id="@+id/todoAddBtn"
+        android:layout_width="78dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="40dp"
+        android:text="Add"
+        app:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/todoRecyclerView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/todoEditText" />
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -38,13 +49,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/todoAddBtn"
-        android:layout_width="78dp"
-        android:layout_height="45dp"
-        android:text="Add"
-        app:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
-        app:layout_constraintEnd_toEndOf="@+id/todoRecyclerView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/todoEditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

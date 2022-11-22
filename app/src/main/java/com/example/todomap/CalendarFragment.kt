@@ -1,34 +1,31 @@
 package com.example.todomap
 
-import android.os.Build
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todomap.databinding.ActivityMainBinding
 import com.example.todomap.databinding.FragmentCalendarBinding
+import com.example.todomap.retrofit.model.TodoCreate
+import com.example.todomap.retrofit.model.TodoEntity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.*
 
-class CalendarFragment : Fragment() {
+class CalendarFragment(private var uid: String) : Fragment() {
 
-    companion object {
-        fun newInstance() = CalendarFragment()
-    }
 
-    lateinit var binding : FragmentCalendarBinding
+    private lateinit var binding : FragmentCalendarBinding
     private val todoViewModel: TodoViewModel by viewModels()
     private lateinit var adapter: TodoListAdapter
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,16 +36,16 @@ class CalendarFragment : Fragment() {
         setRecyclerView(recyclerView)
 
         //date LiveDate 변경 감지
-        todoViewModel.date.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        todoViewModel.date.observe(viewLifecycleOwner) {
             Log.d("date", it.toString())
-            todoViewModel.getAllByDate(it).observe(viewLifecycleOwner) { todoList ->
+            todoViewModel.getAllByDate(uid, it.toString()).observe(viewLifecycleOwner) { todoList ->
                 if (todoList != null) {
                     // Adapter 데이터 갱신
                     adapter.setTodoList(todoList)
                     adapter.notifyDataSetChanged()
                 }
             }
-        })
+        }
 
         binding.calendarView.setOnDateChangeListener{ _, year, month,dayOfMonth ->
             val dateStr = "$year-${month+1}-$dayOfMonth"
@@ -57,9 +54,11 @@ class CalendarFragment : Fragment() {
 
         binding.todoAddBtn.setOnClickListener {
             val description = binding.todoEditText.text.toString()
+            // time
+            // location
             GlobalScope.launch {
                 val date = todoViewModel.date.value!!
-                todoViewModel.insert(TodoEntity(null, description, date))
+                todoViewModel.insert(TodoCreate(uid, date, time, locLatitude , locLongitude , description))
             }
         }
 
@@ -69,7 +68,6 @@ class CalendarFragment : Fragment() {
     private fun setRecyclerView(recyclerView: RecyclerView){
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
-//        recyclerView.adapter = TodoListAdapter()
         val dateOfToday = getTodayOfDate()
         todoViewModel.updateDate(dateOfToday)
     }
@@ -77,7 +75,7 @@ class CalendarFragment : Fragment() {
     private fun getTodayOfDate(): String {
         //오늘 날짜
         val dateOfTodayLong = binding.calendarView.date
-        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return sdf.format(dateOfTodayLong)
     }
 
