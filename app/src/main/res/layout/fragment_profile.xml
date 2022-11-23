@@ -79,7 +79,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="My Introduction"
-        android:textColor="@android:color/secondary_text_material_light"
+        android:textColor="#787878"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/userNameText"
         app:layout_constraintTop_toTopOf="@+id/userEmailText" />

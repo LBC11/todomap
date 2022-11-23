@@ -20,6 +20,11 @@
         android:usesCleartextTraffic="true"
 
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBlp1vRST1VQcVMhclu_kIs0m4dp2dDWeY" />
+
         <activity
             android:name=".profile.SignupActivity"
             android:exported="true">

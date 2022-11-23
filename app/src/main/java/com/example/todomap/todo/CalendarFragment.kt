@@ -70,9 +70,11 @@ class CalendarFragment(private var uid: String) : Fragment() {
         }
 
         //위치 설정
+        val supportFragmentManager = childFragmentManager
         val locLatitude = 0.0
         val locLongitude = 0.0
         binding.setLocaBtn.setOnClickListener {
+            TodomapdialogFragment().show(supportFragmentManager, "SampleDialog")
 
         }
 
