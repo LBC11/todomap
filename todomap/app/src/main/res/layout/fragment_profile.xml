@@ -14,9 +14,9 @@
         android:layout_marginTop="68dp"
         android:layout_marginEnd="16dp"
         android:text="Signout"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toTopOf="@+id/info" />
 
     <Button
         android:id="@+id/withdrawBtn"
@@ -24,7 +24,7 @@
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
         android:text="Withdraw"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/signoutBtn"
         app:layout_constraintEnd_toStartOf="@+id/signoutBtn" />
 
@@ -40,23 +40,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/userNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="36dp"
-        android:text="UserName"
-        android:textColor="@color/material_dynamic_primary0"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/profile_img"
-        app:layout_constraintTop_toTopOf="@+id/profile_img" />
-
     <Button
         android:id="@+id/profileChangeBtn"
         android:layout_width="100dp"
         android:layout_height="48dp"
         android:text="change"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_img"
         app:layout_constraintStart_toStartOf="@+id/profile_img"
         app:layout_constraintTop_toBottomOf="@+id/profile_img" />
@@ -65,13 +54,12 @@
         android:id="@+id/userEmailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
         android:text="xxxxxx@gmail.com"
         app:layout_constraintStart_toStartOf="@+id/userNameText"
-        app:layout_constraintTop_toTopOf="@+id/userNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameText" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/info"
         android:layout_width="141dp"
         android:layout_height="48dp"
         android:layout_marginTop="72dp"
@@ -79,9 +67,9 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="My Introduction"
-        android:textColor="@android:color/secondary_text_material_light"
+        android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/userNameText"
+        app:layout_constraintStart_toStartOf="@+id/userEmailText"
         app:layout_constraintTop_toTopOf="@+id/userEmailText" />
 
     <ImageButton
@@ -92,8 +80,30 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_angle_right"
         app:layout_constraintBottom_toBottomOf="@+id/userNameText"
-        app:layout_constraintStart_toEndOf="@+id/userNameText"
-        app:layout_constraintTop_toTopOf="@+id/userNameText" />
+        app:layout_constraintStart_toEndOf="@+id/userNameText" />
+
+    <Button
+        android:id="@+id/button_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="162dp"
+        android:layout_marginBottom="319dp"
+        android:text="temp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/userNameText"
+        android:layout_width="103dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="36dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="UserName"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_img"
+        app:layout_constraintTop_toTopOf="@+id/profile_img" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

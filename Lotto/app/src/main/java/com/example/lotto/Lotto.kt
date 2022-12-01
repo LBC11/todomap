@@ -1,4 +1,4 @@
-package com
+package com.example.lotto
 
 data class Lotto(
     val num1: Int,

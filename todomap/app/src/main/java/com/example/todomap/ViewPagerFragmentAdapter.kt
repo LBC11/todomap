@@ -3,11 +3,12 @@ package com.example.todomap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.todomap.profile.UserAccount
+import com.example.todomap.user.UserAccount
 import com.example.todomap.profile.ProfileFragment
-import com.example.todomap.todo.CalendarFragment
+import com.example.todomap.calendar.CalendarFragment
 
-class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity, private var uid: String, private var userAccount: UserAccount): FragmentStateAdapter(fragmentActivity){
+class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
 
     private val TYPE_PROFILE = 0
     private val TYPE_TODO = 1
@@ -20,9 +21,10 @@ class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity, private var u
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            TYPE_PROFILE -> ProfileFragment(userAccount)
-            TYPE_TODO -> CalendarFragment(uid)
-            else ->MapFragment()
+            TYPE_PROFILE -> ProfileFragment()
+            //TYPE_TODO -> CalendarFragment(uid)
+            else -> CalendarFragment()
+//            else ->MapFragment()
         }
     }
 }

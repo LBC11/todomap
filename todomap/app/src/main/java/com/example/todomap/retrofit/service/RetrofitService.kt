@@ -10,16 +10,16 @@ import java.util.concurrent.TimeUnit
 class RetrofitService {
 
     companion object {
-        private const val baseUrl = "http://10.0.2.2:8080/"
+        private const val baseUrl = "http://203.246.85.178:8080/"
 
         private var gson = GsonBuilder()
             .setLenient()
             .create()
 
         private var okHttpClient = OkHttpClient().newBuilder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.SECONDS)
             .build()
 
         private val retrofit: Retrofit = Retrofit.Builder()

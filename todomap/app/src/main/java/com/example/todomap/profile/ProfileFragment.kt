@@ -19,21 +19,28 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import com.example.todomap.MapFragment
-import com.example.todomap.todo.TodoViewModel
+import androidx.lifecycle.lifecycleScope
+import com.example.todomap.calendar.TodoViewModel
 import com.example.todomap.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.bumptech.glide.Glide
+import com.example.todomap.login.SigninActivity
+import com.example.todomap.login.SignupActivity
+import com.example.todomap.retrofit.service.RetrofitService
+import com.example.todomap.user.UserAccount
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
-class ProfileFragment(var userAccount: UserAccount) : Fragment() {
+class ProfileFragment : Fragment() {
+
+    private val TAG: String = "ITM"
 
     private lateinit var context: FragmentActivity
-    private lateinit var binding : FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
 
     private val todoViewModel: TodoViewModel by viewModels()
 
@@ -43,12 +50,14 @@ class ProfileFragment(var userAccount: UserAccount) : Fragment() {
     private lateinit var database: DatabaseReference
 
     private val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001
-    private val TAG: String? = MapFragment::class.java.simpleName
+
+    private lateinit var account: UserAccount
 
     // 갤러리에서 이미지 가져오는 launcher
-    private val requestLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if (it.resultCode == Activity.RESULT_OK) binding.profileImg.setImageURI(it.data?.data)
-    }
+    private val requestLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) binding.profileImg.setImageURI(it.data?.data)
+        }
 
     @Deprecated("Deprecated in Java")
     override fun onAttach(activity: Activity) { // Fragment 가 Activity 에 attach 될 때 호출된다.
@@ -67,57 +76,71 @@ class ProfileFragment(var userAccount: UserAccount) : Fragment() {
         database = FirebaseDatabase.getInstance().reference
         firebaseStorage = FirebaseStorage.getInstance().reference
 
-        val uid = firebaseAuth.currentUser?.uid.toString()
-        val email = firebaseAuth.currentUser?.email.toString()
-
         // email, username 받아오기
-        binding.userEmailText.text = userAccount.email
-        binding.userNameText.text = userAccount.userName
+        binding.userEmailText.text = account.email
+        binding.userNameText.setText(account.userName)
+        binding.info.setText(account.infor)
+        Log.d(TAG, "${account.email}, ${account.userName}, ${account.infor}")
 
         // 프로필 이미지 설정
         binding.profileImg.setOnClickListener {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if(ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                    ActivityCompat.requestPermissions(context, arrayOf(READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE)
-                } else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_DENIED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        context,
+                        arrayOf(READ_EXTERNAL_STORAGE),
+                        PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                    )
+                } else {
                     pickImageFromGallery()
                 }
-            } else{
+            } else {
                 pickImageFromGallery()
             }
         }
 
         // 프로필 변경 버튼 누를 시 프로필 사진 storage 에 업로드, 이름 변경
-        binding.profileChangeBtn.setOnClickListener{
-            userAccount.userName = binding.userNameText.toString()
-            userAccount.profileImgUrl = uid+"_profileImg"
-            database.child("userAccount").child(email).child(uid).setValue(userAccount)
+        binding.profileChangeBtn.setOnClickListener {
+            account.userName = binding.userNameText.toString()
+            account.profileImgUrl = account.idToken + "_profileImg"
+            database.child("userAccount").child(account.idToken).setValue(account)
 
             val imgBitmap = (binding.profileImg.drawable as BitmapDrawable).bitmap
             val baos = ByteArrayOutputStream()
             imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
-            val storageReference = firebaseStorage.child(uid+"_profileImg")
+            val storageReference = firebaseStorage.child(account.idToken + "_profileImg")
 
             val uploadTask = storageReference.putBytes(data)
-            uploadTask.addOnFailureListener{
-                Log.d(TAG, "Image Upload Failure")
+            uploadTask.addOnFailureListener {
+                Log.d("ITM", "Image Upload Failure")
             }.addOnSuccessListener {
-                Log.d(TAG, "Image Upload Success")
+                Log.d("ITM", "Image Upload Success")
             }
         }
 
         // 기본 이미지가 아닐 때 프로필 사진 받아오기
-        if(userAccount.profileImgUrl != "-") {
-            firebaseStorage.child(firebaseAuth.currentUser?.uid.toString()+"_profileImg").downloadUrl
-                .addOnCompleteListener{
-                    if (it.isSuccessful){
+        if (account.profileImgUrl != "-") {
+            firebaseStorage.child(firebaseAuth.currentUser?.uid.toString() + "_profileImg").downloadUrl
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
                         Glide.with(this).load(it.result).into(binding.profileImg)
-                        userAccount.profileImgUrl = it.result.toString()
-                    }else{
+                        account.profileImgUrl = it.result.toString()
+                    } else {
                         Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
                     }
                 }
+        }
+
+        binding.buttonTemp.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val temp = RetrofitService.todoService.getTodos("uid1")
+                Log.d("ITM", "${temp}")
+            }
         }
 
         //로그아웃
@@ -129,7 +152,7 @@ class ProfileFragment(var userAccount: UserAccount) : Fragment() {
         //회원 탈퇴
         binding.withdrawBtn.setOnClickListener {
             firebaseAuth.currentUser?.delete()
-            val intent = Intent(context, SignupActivity::class.java)
+            val intent = Intent(context, SigninActivity::class.java)
             startActivity(intent)
         }
 
@@ -137,19 +160,37 @@ class ProfileFragment(var userAccount: UserAccount) : Fragment() {
     }
 
     // 갤러리에서 인텐트로 이미지 가져오기
-    private fun pickImageFromGallery(){
+    private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         requestLauncher.launch(intent)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        when (requestCode) { PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE -> {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                pickImageFromGallery()
+    private fun getAccount(uid: String, email: String) {
+        database.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
             }
-            else Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickImageFromGallery()
+                } else Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }

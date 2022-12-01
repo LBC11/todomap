@@ -1,11 +1,11 @@
-package com
+package com.example.lotto
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lotto.databinding.LottoBinding
 
-class LottoAdapter(val lottos: MutableList<Lotto>): RecyclerView.Adapter<LottoAdapter.ViewHolder>() {
+class LottoAdapter(private val lottos: MutableList<Lotto>): RecyclerView.Adapter<LottoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LottoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -20,7 +20,7 @@ class LottoAdapter(val lottos: MutableList<Lotto>): RecyclerView.Adapter<LottoAd
         return lottos.size
     }
 
-    class ViewHolder(val binding: LottoBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: LottoBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(lotto: Lotto) {
             binding.num1.text = lotto.num1.toString()
             binding.num2.text = lotto.num2.toString()
