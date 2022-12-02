@@ -4,7 +4,7 @@ data class UserAccount(
     val idToken: String, // firebase user's Uid
     val email: String,
     var userName: String,
-    var infor: String,
+    var info: String,
     var profileImgUrl: String
 ) {
     constructor() : this("", "","", "","")

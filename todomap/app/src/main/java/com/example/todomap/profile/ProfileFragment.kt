@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +16,17 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.todomap.calendar.TodoViewModel
 import com.example.todomap.databinding.FragmentProfileBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.bumptech.glide.Glide
 import com.example.todomap.login.SigninActivity
-import com.example.todomap.login.SignupActivity
 import com.example.todomap.retrofit.service.RetrofitService
 import com.example.todomap.user.UserAccount
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -73,14 +72,16 @@ class ProfileFragment : Fragment() {
         binding.profileImg.clipToOutline = true
 
         firebaseAuth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().reference
+        val currentUser = firebaseAuth.currentUser
+        val uid = currentUser?.uid.toString()
+        val email = currentUser?.email.toString()
+
+        database = FirebaseDatabase.getInstance().reference.child("userAccount").child(uid)
         firebaseStorage = FirebaseStorage.getInstance().reference
 
-        // email, username 받아오기
-        binding.userEmailText.text = account.email
-        binding.userNameText.setText(account.userName)
-        binding.info.setText(account.infor)
-        Log.d(TAG, "${account.email}, ${account.userName}, ${account.infor}")
+        account = UserAccount(uid, email, "name", "my info", "-")
+
+        getAccount(uid, email)
 
         // 프로필 이미지 설정
         binding.profileImg.setOnClickListener {
@@ -105,9 +106,10 @@ class ProfileFragment : Fragment() {
 
         // 프로필 변경 버튼 누를 시 프로필 사진 storage 에 업로드, 이름 변경
         binding.profileChangeBtn.setOnClickListener {
-            account.userName = binding.userNameText.toString()
+            account.userName = binding.userNameText.text.toString()
+            account.info = binding.info.text.toString()
             account.profileImgUrl = account.idToken + "_profileImg"
-            database.child("userAccount").child(account.idToken).setValue(account)
+            database.setValue(account)
 
             val imgBitmap = (binding.profileImg.drawable as BitmapDrawable).bitmap
             val baos = ByteArrayOutputStream()
@@ -123,25 +125,27 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        // 기본 이미지가 아닐 때 프로필 사진 받아오기
-        if (account.profileImgUrl != "-") {
-            firebaseStorage.child(firebaseAuth.currentUser?.uid.toString() + "_profileImg").downloadUrl
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Glide.with(this).load(it.result).into(binding.profileImg)
-                        account.profileImgUrl = it.result.toString()
-                    } else {
-                        Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
+//        binding.buttonTemp.setOnClickListener {
+//            val imgBitmap = (binding.profileImg.drawable as BitmapDrawable).bitmap
+//            val baos = ByteArrayOutputStream()
+//            imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//            val data = baos.toByteArray()
+//            val storageReference = firebaseStorage.child("basic" + "_profileImg")
+//
+//            val uploadTask = storageReference.putBytes(data)
+//            uploadTask.addOnFailureListener {
+//                Log.d("ITM", "Image Upload Failure")
+//            }.addOnSuccessListener {
+//                Log.d("ITM", "Image Upload Success")
+//            }
+//        }
 
-        binding.buttonTemp.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val temp = RetrofitService.todoService.getTodos("uid1")
-                Log.d("ITM", "${temp}")
-            }
-        }
+//        binding.buttonTemp.setOnClickListener {
+//            lifecycleScope.launch(Dispatchers.IO) {
+//                val temp = RetrofitService.todoService.getTodos("uid1")
+//                Log.d("ITM", "${temp}")
+//            }
+//        }
 
         //로그아웃
         binding.signoutBtn.setOnClickListener {
@@ -151,7 +155,23 @@ class ProfileFragment : Fragment() {
         }
         //회원 탈퇴
         binding.withdrawBtn.setOnClickListener {
+
+            // delete the user image in the storage
+            if(account.profileImgUrl != "basic") {
+                firebaseStorage.child(account.idToken + "_profileImg").delete()
+                account.profileImgUrl = "basic"
+            }
+
+            // delete the user data in the realtime DB
+            database.removeValue()
+
+            // delete the user todoList
+
+
+            // delete the user account
             firebaseAuth.currentUser?.delete()
+
+            // Go to the SignIn activity
             val intent = Intent(context, SigninActivity::class.java)
             startActivity(intent)
         }
@@ -159,25 +179,63 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
+    // realtimeDB 에서 account 가져오기
+    private fun getAccount(uid: String, email: String) {
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    Log.d(TAG, "success to load userAccount in DB")
+                    val tempHash = snapshot.value as HashMap<*, *>?
+                    account.info = tempHash?.get("info").toString()
+                    account.profileImgUrl = tempHash?.get("profileImgUrl").toString()
+                    account.userName = tempHash?.get("userName").toString()
+
+                    // email, username, info 설정
+                    binding.userEmailText.text = account.email
+                    binding.userNameText.setText(account.userName)
+                    binding.info.setText(account.info)
+
+                    // 프로필 사진 받아오기
+                    getImage()
+
+                } else {
+                    Log.d(TAG, "There are no userAccount in DB")
+                    val account = UserAccount(uid, email,"-","my info","basic")
+                    database.setValue(account)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d(TAG, "Failed to load userAccount in DB")
+            }
+        })
+    }
+
+    // 프로필 사진 받아오기
+    private fun getImage() {
+        var path: String = firebaseAuth.currentUser?.uid.toString()
+
+        // 기본 이미지 사용의 경우 path 변경
+        if (account.profileImgUrl.startsWith("basic")) {
+            path = "basic"
+        }
+
+        firebaseStorage.child(path + "_profileImg").downloadUrl
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Glide.with(this).load(it.result).into(binding.profileImg)
+                    account.profileImgUrl = it.result.toString()
+                } else {
+                    Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
     // 갤러리에서 인텐트로 이미지 가져오기
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         requestLauncher.launch(intent)
-    }
-
-    private fun getAccount(uid: String, email: String) {
-        database.addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
     }
 
     @Deprecated("Deprecated in Java")

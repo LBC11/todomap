@@ -3,39 +3,35 @@ package com.example.todomap
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.example.todomap.databinding.ActivityMainBinding
-import com.example.todomap.user.UserAccount
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG: String = "ITM"
-    private val binding by lazy {ActivityMainBinding.inflate(layoutInflater)}
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private val permissionId = 2
+
+    // to override backSpace
+    private val finishTime: Long= 1000
+    private var pressTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        val currentUser = firebaseAuth.currentUser
         database = FirebaseDatabase.getInstance().reference
-
-        val uid = currentUser?.uid.toString()
-        val email = currentUser?.email.toString()
-        saveUserData(uid, email)
 
         val viewpagerAdapter = ViewPagerFragmentAdapter(this)
         binding.viewPager.adapter = viewpagerAdapter
@@ -59,21 +55,17 @@ class MainActivity : AppCompatActivity() {
         return view
     }
 
-    private fun saveUserData(uid: String, email: String) {
-        val account = UserAccount(uid, email,"-","my info","-")
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        val now = System.currentTimeMillis()
+        val intervalTime = now - pressTime
 
-        database.child("userAccount").child(uid).get()
-            .addOnSuccessListener {
-                try {
-                    Log.d(TAG, "Data about the user is already stored in the db.")
-                } catch (e: java.lang.NullPointerException) {
-                    database.child("userAccount").child(uid).setValue(account)
-                    Log.d(TAG, "save user data in DB")
-                }
-            }.addOnFailureListener{
-                Log.d(TAG, "RealtimeDB get error in the loadAccount")
-            }
-
+        if (intervalTime in 0..finishTime) {
+            finish()
+        } else {
+            pressTime = now
+            Toast.makeText(getApplicationContext(), "한번더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT).show()
+        }
     }
 
 //    @SuppressLint("MissingPermission", "SetTextI18n")
