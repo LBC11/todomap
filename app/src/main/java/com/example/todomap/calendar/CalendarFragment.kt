@@ -38,6 +38,7 @@ class CalendarFragment : Fragment() {
     ): View {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
 
+        firebaseAuth = FirebaseAuth.getInstance()
         val uid = firebaseAuth.currentUser?.uid.toString()
 
         val recyclerView = binding.todoRecyclerView

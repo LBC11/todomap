@@ -22,9 +22,8 @@ class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             TYPE_PROFILE -> ProfileFragment()
-            //TYPE_TODO -> CalendarFragment(uid)
-            else -> CalendarFragment()
-//            else ->MapFragment()
+//            TYPE_TODO -> CalendarFragment()
+            else ->MapFragment()
         }
     }
 }
