@@ -1,6 +1,7 @@
 package com.example.todomap
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.R
 import android.app.Activity
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
@@ -42,7 +43,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // GoogleMap variables
     private val TAG = "ITM"
     private lateinit var map: GoogleMap
-    private var mapView: MapView? = null
+    private lateinit var mapView: MapView
     private var currentMarker: Marker? = null
 
     // Permission Launcher
@@ -72,10 +73,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         context = activity as FragmentActivity
         super.onAttach(activity)
     }
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        // 초기화 해야 하는 리소스들을 여기서 초기화 해준다.
-//    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 초기화 해야 하는 리소스들을 여기서 초기화 해준다.
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -87,7 +89,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val cameraPosition: CameraPosition? = savedInstanceState.getParcelable(KEY_CAMERA_POSITION)
         }
         binding = FragmentMapBinding.inflate(inflater, container, false)
-        binding.mapView.onCreate(savedInstanceState)
+
+        mapView = binding.mapView
+        if (mapView != null) {
+            mapView!!.onCreate(savedInstanceState)
+        }
+
         binding.mapView.getMapAsync(this)
 
         return binding.root
