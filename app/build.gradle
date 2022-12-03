@@ -64,6 +64,7 @@ dependencies {
     // Google map
     implementation 'com.google.maps.android:maps-utils-ktx:3.4.0'
     // Google Location (FusedLocationProviderClient)
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     // Google place picker
     implementation 'com.google.android.libraries.places:places:2.7.0'
