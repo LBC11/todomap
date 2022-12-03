@@ -1,7 +1,6 @@
 package com.example.todomap.profile
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todomap.calendar.TodoListAdapter
-import com.example.todomap.databinding.TodoitemRecyclerBinding
 import com.example.todomap.databinding.UseritemRecyclerBinding
 import com.example.todomap.user.UserAccount
 
-class UsersearchAdapter(var users: ArrayList<UserAccount>, var context: Context) : RecyclerView.Adapter<UsersearchAdapter.ViewHolder>(), Filterable {
+class UsersearchAdapter(var users: ArrayList<UserAccount>, var context: UsersearchFragment) : RecyclerView.Adapter<UsersearchAdapter.ViewHolder>(), Filterable {
 
     private var filteredUser = ArrayList<UserAccount>()
     private var itemFilter = ItemFilter()

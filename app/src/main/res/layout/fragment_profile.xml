@@ -12,8 +12,9 @@
         android:layout_width="70dp"
         android:layout_height="48dp"
         android:layout_marginEnd="12dp"
-        android:text="Withdraw"
+        android:text="탈퇴"
         android:textSize="12sp"
+        android:background="@drawable/default_button"
         app:layout_constraintBottom_toBottomOf="@+id/signoutBtn"
         app:layout_constraintEnd_toStartOf="@+id/signoutBtn" />
 
@@ -22,80 +23,214 @@
         android:layout_width="70dp"
         android:layout_height="48dp"
         android:layout_marginEnd="136dp"
-        android:text="Signout"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/default_button"
+        android:text="로그아웃"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="677dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_img"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="48dp"
         android:background="@android:color/transparent"
         android:src="@drawable/logo_todomap"
         app:circularflow_radiusInDP="500dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+<!--    <EditText-->
+<!--        android:id="@+id/userNameText"-->
+<!--        android:layout_width="103dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:text="UserName"-->
+<!--        android:textSize="16sp"-->
+<!--        tools:layout_editor_absoluteX="222dp"-->
+<!--        tools:layout_editor_absoluteY="295dp" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/info"-->
+<!--        android:layout_width="141dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="56dp"-->
+<!--        android:background="@null"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:text="My Introduction"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14sp"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/userEmailText"-->
+<!--        tools:layout_editor_absoluteX="205dp" />-->
+
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view7" />
+
+    <View
+        android:id="@+id/view7"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+    <View
+        android:id="@+id/view6"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_img" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+    <TextView
+        android:id="@+id/userInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Introduction"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view5"
+        app:layout_constraintEnd_toStartOf="@+id/infoChangeBtn"
+        app:layout_constraintTop_toTopOf="@+id/view5"
+        app:layout_constraintVertical_bias="0.515" />
+
+    <TextView
+        android:id="@+id/userNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="usernamemmm"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintEnd_toStartOf="@+id/userNameChangeBtn"
+        app:layout_constraintTop_toTopOf="@+id/view3"
+        app:layout_constraintVertical_bias="0.484" />
+
+    <ImageButton
+        android:id="@+id/userNameChangeBtn"
+        android:layout_width="31dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="16dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/userNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/userNameText" />
+
+    <ImageButton
+        android:id="@+id/imageChangeBtn"
+        android:layout_width="31dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="16dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/view7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view7" />
+
+    <ImageButton
+        android:id="@+id/infoChangeBtn"
+        android:layout_width="31dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="16dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/userInfoText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/userInfoText" />
+
 
     <Button
         android:id="@+id/profileChangeBtn"
         android:layout_width="100dp"
         android:layout_height="48dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
         android:text="change"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_img"
-        app:layout_constraintHorizontal_bias="0.89"
-        app:layout_constraintStart_toStartOf="@+id/profile_img"
-        app:layout_constraintTop_toBottomOf="@+id/profile_img" />
-
-    <EditText
-        android:id="@+id/info"
-        android:layout_width="141dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="84dp"
-        android:background="@null"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="My Introduction"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="@+id/userEmailText"
-        tools:layout_editor_absoluteX="232dp" />
-
-    <EditText
-        android:id="@+id/userNameText"
-        android:layout_width="103dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="UserName"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/profile_img"
-        app:layout_constraintTop_toTopOf="@+id/profile_img" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/userEmailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:text="xxxxxx@gmail.com"
-        app:layout_constraintTop_toBottomOf="@+id/userNameText"
-        tools:layout_editor_absoluteX="232dp" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view6"
+        app:layout_constraintEnd_toEndOf="@+id/view6"
+        app:layout_constraintTop_toTopOf="@+id/view6" />
 
-    <ImageButton
-        android:id="@+id/userNameChangeBtn"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="12dp"
-        android:background="#00FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_angle_right"
-        app:layout_constraintStart_toEndOf="@+id/userNameText"
-        tools:layout_editor_absoluteY="356dp" />
+    <TextView
+        android:id="@+id/profileTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Profile"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view3" />
 
+    <TextView
+        android:id="@+id/useridTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="17dp"
+        android:text="User ID"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view6" />
+
+    <TextView
+        android:id="@+id/introTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Introduction"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toTopOf="@+id/view5" />
+
+    <TextView
+        android:id="@+id/imageTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Image"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view7"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toTopOf="@+id/view7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

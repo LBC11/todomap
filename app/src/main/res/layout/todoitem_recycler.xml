@@ -10,7 +10,9 @@
         android:layout_width="383dp"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
-        android:text="todoDescription"
+        android:button="@drawable/check_button"
+        android:hint="TodoDescription"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,10 +21,18 @@
         android:id="@+id/alartTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="time"
-        app:layout_constraintEnd_toEndOf="@+id/todoDescription"
-        app:layout_constraintHorizontal_bias="0.113"
+        android:layout_marginStart="28dp"
+        android:text="Time"
         app:layout_constraintStart_toStartOf="@+id/todoDescription"
+        app:layout_constraintTop_toBottomOf="@+id/todoDescription" />
+
+    <TextView
+        android:id="@+id/alartLocationView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Location"
+        app:layout_constraintStart_toEndOf="@+id/alartTimeView"
         app:layout_constraintTop_toBottomOf="@+id/todoDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

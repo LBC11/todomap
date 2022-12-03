@@ -36,7 +36,7 @@ import java.io.ByteArrayOutputStream
 
 class ProfileFragment : Fragment() {
 
-    private val TAG: String = "ITM"
+    private val TAG: String = "ProfileFragment"
 
     private lateinit var context: FragmentActivity
     private lateinit var binding: FragmentProfileBinding
@@ -107,7 +107,7 @@ class ProfileFragment : Fragment() {
         // 프로필 변경 버튼 누를 시 프로필 사진 storage 에 업로드, 이름 변경
         binding.profileChangeBtn.setOnClickListener {
             account.userName = binding.userNameText.text.toString()
-            account.info = binding.info.text.toString()
+            account.info = binding.userInfoText.text.toString()
             account.profileImgUrl = account.idToken + "_profileImg"
             database.setValue(account)
 
@@ -193,7 +193,7 @@ class ProfileFragment : Fragment() {
                     // email, username, info 설정
                     binding.userEmailText.text = account.email
                     binding.userNameText.setText(account.userName)
-                    binding.info.setText(account.info)
+                    binding.userInfoText.setText(account.info)
 
                     // 프로필 사진 받아오기
                     getImage()
