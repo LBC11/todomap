@@ -3,7 +3,7 @@
     <size
         android:width="1000dp"
         android:height="100dp"
-    />
+        />
     <solid android:color="@color/quantum_grey500" />
     <corners
         android:bottomLeftRadius="100dp"

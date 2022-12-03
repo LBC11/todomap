@@ -69,11 +69,11 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.7.0'
     // WorkManager for background operation
     implementation "androidx.work:work-runtime-ktx:2.7.1"
-
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
-
+    //Circle ImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'

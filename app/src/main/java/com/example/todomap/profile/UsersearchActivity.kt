@@ -21,7 +21,7 @@ class UsersearchActivity : AppCompatActivity() {
 
         users = callUserAccounts()
 
-        // Realtime DB에서 결과 가져오기
+        // Realtime DB에서 결과 가져오기gh
 
 
         // Adapter
