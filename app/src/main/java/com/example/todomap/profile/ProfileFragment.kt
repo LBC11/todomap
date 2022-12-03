@@ -151,6 +151,11 @@ class ProfileFragment : Fragment() {
         binding.signoutBtn.setOnClickListener {
             firebaseAuth.signOut()
             val intent = Intent(context, SigninActivity::class.java)
+
+            // To prevent user from entering main activity without login
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
             startActivity(intent)
         }
         //회원 탈퇴
@@ -173,6 +178,11 @@ class ProfileFragment : Fragment() {
 
             // Go to the SignIn activity
             val intent = Intent(context, SigninActivity::class.java)
+
+            // To prevent user from entering main activity without login
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
             startActivity(intent)
         }
 

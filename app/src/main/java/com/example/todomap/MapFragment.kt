@@ -91,9 +91,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentMapBinding.inflate(inflater, container, false)
 
         mapView = binding.mapView
-        if (mapView != null) {
-            mapView!!.onCreate(savedInstanceState)
-        }
+        mapView.onCreate(savedInstanceState)
 
         binding.mapView.getMapAsync(this)
 
@@ -242,6 +240,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // Check location permissions
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) locationPermissionGranted = true
         else ActivityCompat.requestPermissions(context, arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
@@ -265,20 +264,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() { // 유저에게 Fragment 가 보이도록 해준다.
         super.onStart()
-        mapView!!.onStart()
+        mapView.onStart()
         Log.d(TAG, "onStart ")
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapView.onStop()
         Log.d(TAG, "onStop : removeLocationUpdates")
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() { // 유저에게 Fragment 가 보여지고, 유저와 상호작용이 가능하게 되는 부분
         super.onResume()
-        mapView!!.onResume()
+        mapView.onResume()
         if (locationPermissionGranted) {
             Log.d(TAG, "onResume : requestLocationUpdates")
             if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

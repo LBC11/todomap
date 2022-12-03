@@ -23,7 +23,7 @@ class ViewPagerFragmentAdapter(fragmentActivity: FragmentActivity) :
         return when (position) {
             TYPE_PROFILE -> ProfileFragment()
 //            TYPE_TODO -> CalendarFragment()
-            else ->MapFragment()
+            else -> MapFragment()
         }
     }
 }
