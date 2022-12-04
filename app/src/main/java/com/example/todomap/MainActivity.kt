@@ -188,5 +188,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    fun changeFragment(index: Int){
+        when(index){
+            1 -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(binding.viewPager.id, fragment_username)
+                    .commit()
+            }
+        }
+    }
 }
