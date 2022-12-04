@@ -64,11 +64,15 @@ class SigninActivity : AppCompatActivity() {
         if (email.isNotEmpty() && pass.isNotEmpty()) {
             firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                 if (it.isSuccessful) {
-//                    val intent_signup = intent
 
                     val intent = Intent(this, MainActivity::class.java)
-//                    intent.putExtra("UserAccount", intent_signup.getSerializableExtra("UserAccount") as UserAccount?)
+
+                    // To prevent user from entering main activity without login
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
                     startActivity(intent)
+
                 } else {
                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                 }

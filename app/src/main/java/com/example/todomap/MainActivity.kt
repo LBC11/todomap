@@ -87,21 +87,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     // To prevent user from entering main activity without login
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        val now = System.currentTimeMillis()
-        val intervalTime = now - pressTime
-
-        if (intervalTime in 0..finishTime) {
-            moveTaskToBack(true) // 태스크를 백그라운드로 이동
-            finishAndRemoveTask() // 액티비티 종료 + 태스크 리스트에서 지우기
-
-            exitProcess(0)
-        } else {
-            pressTime = now
-            Toast.makeText(applicationContext, "한번더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    @Deprecated("Deprecated in Java")
+//    override fun onBackPressed() {
+//        val now = System.currentTimeMillis()
+//        val intervalTime = now - pressTime
+//
+//        if (intervalTime in 0..finishTime) {
+//            moveTaskToBack(true) // 태스크를 백그라운드로 이동
+//            finishAndRemoveTask() // 액티비티 종료 + 태스크 리스트에서 지우기
+//
+//            exitProcess(0)
+//        } else {
+//            pressTime = now
+//            Toast.makeText(applicationContext, "한번더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     // Get the current user's location
     private fun getCurrentLocation(hasGps: Boolean) {

@@ -1,6 +1,7 @@
 package com.example.todomap
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.R
 import android.app.Activity
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
@@ -42,7 +43,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // GoogleMap variables
     private val TAG = "ITM"
     private lateinit var map: GoogleMap
-    private var mapView: MapView? = null
+    private lateinit var mapView: MapView
     private var currentMarker: Marker? = null
 
     // Permission Launcher
@@ -72,10 +73,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         context = activity as FragmentActivity
         super.onAttach(activity)
     }
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        // 초기화 해야 하는 리소스들을 여기서 초기화 해준다.
-//    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 초기화 해야 하는 리소스들을 여기서 초기화 해준다.
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -87,7 +89,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val cameraPosition: CameraPosition? = savedInstanceState.getParcelable(KEY_CAMERA_POSITION)
         }
         binding = FragmentMapBinding.inflate(inflater, container, false)
-        binding.mapView.onCreate(savedInstanceState)
+
+        mapView = binding.mapView
+        mapView.onCreate(savedInstanceState)
+
         binding.mapView.getMapAsync(this)
 
         return binding.root
@@ -235,6 +240,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // Check location permissions
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) locationPermissionGranted = true
         else ActivityCompat.requestPermissions(context, arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
@@ -258,20 +264,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() { // 유저에게 Fragment 가 보이도록 해준다.
         super.onStart()
-        mapView!!.onStart()
+        mapView.onStart()
         Log.d(TAG, "onStart ")
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapView.onStop()
         Log.d(TAG, "onStop : removeLocationUpdates")
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() { // 유저에게 Fragment 가 보여지고, 유저와 상호작용이 가능하게 되는 부분
         super.onResume()
-        mapView!!.onResume()
+        mapView.onResume()
         if (locationPermissionGranted) {
             Log.d(TAG, "onResume : requestLocationUpdates")
             if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
