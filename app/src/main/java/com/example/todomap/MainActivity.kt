@@ -14,9 +14,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.databinding.ActivityMainBinding
+import com.example.todomap.profile.ProfileFragment
+import com.example.todomap.profile.UsersearchFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +45,13 @@ class MainActivity : AppCompatActivity() {
     private var currentLocation: Location? = null
     lateinit var locationManager: LocationManager
 
+    val fragmentManager = supportFragmentManager
+    var profileFrag = ProfileFragment()
+    var mapFrag = MapFragment()
+    var todoFrag = CalendarFragment()
+    var searchFrag = UsersearchFragment()
+    var reviseFrag = ReviseFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -63,14 +74,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        fragmentManager.commit {
+            add(binding.fragmentContainer.id, todoFrag)
+        }
 
-        val viewpagerAdapter = ViewPagerFragmentAdapter(this)
-        binding.viewPager.adapter = viewpagerAdapter
-        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.customView = getTabView(position)
-        }.attach()
+        binding.profileBtn.setOnClickListener {
+            changeFragment(1)
+        }
+        binding.mapBtn.setOnClickListener {
+            changeFragment(2)
+        }
+        binding.todoBtn.setOnClickListener {
+            changeFragment(3)
+        }
+        binding.searchBtn.setOnClickListener {
+            changeFragment(4)
+        }
     }
 
     private fun getTabView(position: Int): View {
@@ -188,5 +207,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    fun changeFragment(index: Int){
+        when(index){
+            1 -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(binding.viewPager.id, fragment_username)
+                    .commit()
+            }
+        }
+    }
 }
