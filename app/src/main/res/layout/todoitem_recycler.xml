@@ -7,13 +7,12 @@
 
     <CheckBox
         android:id="@+id/todoDescription"
-        android:layout_width="383dp"
-        android:layout_height="48dp"
+        android:layout_width="334dp"
+        android:layout_height="47dp"
         android:layout_marginTop="8dp"
         android:button="@drawable/check_button"
         android:hint="TodoDescription"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

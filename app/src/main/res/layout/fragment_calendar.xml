@@ -8,73 +8,127 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoRecyclerView"
-        android:layout_width="350dp"
-        android:layout_height="196dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/calendarView"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/calendarView"
-        app:layout_constraintTop_toBottomOf="@+id/setTimeBtn" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/view11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view12"
+        app:layout_constraintVertical_weight="3" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/todoEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintVertical_weight="4.5" />
 
     <EditText
         android:id="@+id/todoEditText"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/todo_input"
         android:ems="10"
         android:hint="  Input"
         android:inputType="textPersonName"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/todoRecyclerView"
-        app:layout_constraintStart_toStartOf="@+id/todoRecyclerView"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+        app:layout_constraintBottom_toTopOf="@+id/view12"
+        app:layout_constraintEnd_toEndOf="@+id/calendarView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/calendarView"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
+        app:layout_constraintVertical_weight="0.8" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="0.4" />
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todoRecyclerView"
+        app:layout_constraintVertical_weight="0.4" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/todoEditText"
+        app:layout_constraintVertical_weight="1" />
 
     <Button
         android:id="@+id/todoAddBtn"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/highlight_button"
         android:text="+"
         android:textColor="@color/quantum_grey700"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/todoEditText"
-        app:layout_constraintTop_toBottomOf="@+id/todoEditText" />
-
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.377"
+        app:layout_constraintBottom_toBottomOf="@+id/view12"
+        app:layout_constraintEnd_toStartOf="@+id/setLocaBtn"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/view12"
+        app:layout_constraintVertical_weight="0.5" />
 
     <Button
         android:id="@+id/setLocaBtn"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/default_button"
         android:text="위치 설정"
         app:layout_constraintBottom_toBottomOf="@+id/todoAddBtn"
+        app:layout_constraintEnd_toStartOf="@+id/setTimeBtn"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/todoAddBtn"
-        app:layout_constraintTop_toTopOf="@+id/todoAddBtn" />
+        app:layout_constraintTop_toTopOf="@+id/todoAddBtn"
+        app:layout_constraintVertical_weight="0.5" />
 
     <Button
         android:id="@+id/setTimeBtn"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/default_button"
         android:text="알람 설정"
         app:layout_constraintBottom_toBottomOf="@+id/setLocaBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/setLocaBtn"
-        app:layout_constraintTop_toTopOf="@+id/setLocaBtn" />
+        app:layout_constraintTop_toTopOf="@+id/setLocaBtn"
+        app:layout_constraintVertical_weight="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
