@@ -6,35 +6,103 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="413dp"
-        android:layout_height="645dp"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"></androidx.viewpager2.widget.ViewPager2>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </FrameLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:background="#FFFFFF"
-        android:elevation="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view4" />
 
-    </com.google.android.material.tabs.TabLayout>
+    <View
+        android:id="@+id/view4"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view8" />
+
+    <View
+        android:id="@+id/view8"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view9" />
+
+    <View
+        android:id="@+id/view9"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/searchBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:backgroundTint="#00FFFFFF"
+        android:padding="16dp"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/view3"
         app:srcCompat="@drawable/ic_search" />
+
+    <ImageButton
+        android:id="@+id/profileBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#00FFFFFF"
+        android:padding="16dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/view9"
+        app:layout_constraintEnd_toEndOf="@+id/view9"
+        app:layout_constraintStart_toStartOf="@+id/view9"
+        app:layout_constraintTop_toTopOf="@+id/view9"
+        app:srcCompat="@drawable/navigator_profile" />
+
+    <ImageButton
+        android:id="@+id/mapBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#00FFFFFF"
+        android:padding="16dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/view8"
+        app:layout_constraintEnd_toEndOf="@+id/view8"
+        app:layout_constraintStart_toStartOf="@+id/view8"
+        app:layout_constraintTop_toTopOf="@+id/view8"
+        app:srcCompat="@drawable/navigator_map" />
+
+    <ImageButton
+        android:id="@+id/todoBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#00FFFFFF"
+        android:padding="16dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toTopOf="@+id/view4"
+        app:srcCompat="@drawable/navigator_todo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

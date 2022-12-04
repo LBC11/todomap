@@ -8,15 +8,23 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
+import android.text.TextUtils.replace
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.databinding.ActivityMainBinding
+import com.example.todomap.profile.ProfileFragment
+import com.example.todomap.profile.ReviseFragment
+import com.example.todomap.profile.UsersearchAdapter
+import com.example.todomap.profile.UsersearchFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +35,7 @@ import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = "ITM"
+    private val TAG: String = "MainActivity"
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -41,6 +49,13 @@ class MainActivity : AppCompatActivity() {
     private var currentLocation: Location? = null
     lateinit var locationManager: LocationManager
 
+    val fragmentManager = supportFragmentManager
+    var profileFrag = ProfileFragment()
+    var mapFrag = MapFragment()
+    var todoFrag = CalendarFragment()
+    var searchFrag = UsersearchFragment()
+    var reviseFrag = ReviseFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -50,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val currentUser = firebaseAuth.currentUser
         val uid = currentUser?.uid.toString()
 
-        //
+        // 현재 위치
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
@@ -64,26 +79,23 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val viewpagerAdapter = ViewPagerFragmentAdapter(this)
-        binding.viewPager.adapter = viewpagerAdapter
-        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.customView = getTabView(position)
-        }.attach()
-    }
-
-    private fun getTabView(position: Int): View {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.tab_navigator_item, null, false)
-        val ivTab = view.findViewById<ImageView>(R.id.ivTab)
-
-        when (position) {
-            0 -> ivTab.setImageResource(R.drawable.navigator_profile)
-            1 -> ivTab.setImageResource(R.drawable.navigator_todo)
-//            else -> ivTab.setImageResource(R.drawable.navigator_map)
+        fragmentManager.commit {
+            add(binding.fragmentContainer.id, todoFrag)
         }
-        return view
+
+        binding.profileBtn.setOnClickListener {
+            changeFragment(1)
+        }
+        binding.mapBtn.setOnClickListener {
+            changeFragment(2)
+        }
+        binding.todoBtn.setOnClickListener {
+            changeFragment(3)
+        }
+        binding.searchBtn.setOnClickListener {
+            changeFragment(4)
+        }
+
     }
 
     // To prevent user from entering main activity without login
@@ -102,6 +114,46 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(applicationContext, "한번더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT).show()
 //        }
 //    }
+
+    fun changeFragment(index: Int){
+        when(index){
+            0 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, reviseFrag)
+                }
+            }
+            1 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, profileFrag)
+                }
+            }
+            2 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, mapFrag)
+                }
+            }
+            3 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, todoFrag)
+                }
+            }
+            4 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, searchFrag)
+                }
+            }
+        }
+    }
 
     // Get the current user's location
     private fun getCurrentLocation(hasGps: Boolean) {
@@ -185,17 +237,6 @@ class MainActivity : AppCompatActivity() {
                 gpsLocationListener()
             )
             Log.d(TAG, "location request success")
-        }
-    }
-
-    fun changeFragment(index: Int){
-        when(index){
-            1 -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(binding.viewPager.id, fragment_username)
-                    .commit()
-            }
         }
     }
 }

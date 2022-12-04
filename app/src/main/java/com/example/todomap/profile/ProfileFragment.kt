@@ -30,22 +30,17 @@ class ProfileFragment : Fragment() {
     private lateinit var context: FragmentActivity
     private lateinit var binding: FragmentProfileBinding
 
-    private val todoViewModel: TodoViewModel by viewModels()
-
     private lateinit var firebaseAuth: FirebaseAuth
-
     private lateinit var firebaseStorage: StorageReference
     private lateinit var database: DatabaseReference
 
-    private val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001
-
     private lateinit var account: UserAccount
 
-    // 갤러리에서 이미지 가져오는 launcher
-    private val requestLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) binding.profileMyImg.setImageURI(it.data?.data)
+    private val mainActivity : MainActivity
+        get() {
+            return activity as MainActivity
         }
+
 
     @Deprecated("Deprecated in Java")
     override fun onAttach(activity: Activity) { // Fragment 가 Activity 에 attach 될 때 호출된다.
@@ -74,7 +69,7 @@ class ProfileFragment : Fragment() {
 
         // 프로필 변경
         binding.profileView.setOnClickListener {
-            activity.changeFragment(1)
+            mainActivity.changeFragment(0)
         }
 
         //로그아웃

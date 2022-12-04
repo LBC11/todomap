@@ -19,9 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
-import com.example.todomap.R
-import com.example.todomap.databinding.FragmentUsernameBinding
-import com.example.todomap.login.SigninActivity
+import com.example.todomap.databinding.FragmentReviseBinding
 import com.example.todomap.user.UserAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -29,12 +27,12 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
 
-class UsernameFragment : Fragment() {
+class ReviseFragment : Fragment() {
 
     private val TAG: String = "ProfileFragment"
 
     private lateinit var context: FragmentActivity
-    private lateinit var binding: FragmentUsernameBinding
+    private lateinit var binding: FragmentReviseBinding
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseStorage: StorageReference
@@ -54,7 +52,7 @@ class UsernameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentUsernameBinding.inflate(inflater, container, false)
+        binding = FragmentReviseBinding.inflate(inflater, container, false)
         firebaseAuth = FirebaseAuth.getInstance()
 
         val currentUser = firebaseAuth.currentUser
