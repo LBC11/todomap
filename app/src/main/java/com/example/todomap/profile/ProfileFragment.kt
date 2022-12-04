@@ -8,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.todomap.MainActivity
-import com.example.todomap.calendar.TodoViewModel
 import com.example.todomap.databinding.FragmentProfileBinding
 import com.example.todomap.login.SigninActivity
 import com.example.todomap.user.UserAccount
@@ -25,7 +22,9 @@ import com.google.firebase.storage.StorageReference
 
 class ProfileFragment : Fragment() {
 
-    private val TAG: String = "ProfileFragment"
+    companion object {
+        private const val TAG: String = "ProfileFragment"
+    }
 
     private lateinit var context: FragmentActivity
     private lateinit var binding: FragmentProfileBinding
@@ -115,10 +114,10 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     Log.d(TAG, "success to load userAccount in DB")
-                    val tempHash = snapshot.value as HashMap<*, *>?
-                    account.info = tempHash?.get("info").toString()
-                    account.profileImgUrl = tempHash?.get("profileImgUrl").toString()
-                    account.userName = tempHash?.get("userName").toString()
+                    val hash = snapshot.value as HashMap<*, *>?
+                    account.info = hash?.get("info").toString()
+                    account.profileImgUrl = hash?.get("profileImgUrl").toString()
+                    account.userName = hash?.get("userName").toString()
 
                     // email, username, info 설정
                     binding.userEmailText.text = account.email
