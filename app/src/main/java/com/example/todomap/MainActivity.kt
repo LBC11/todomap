@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity() {
         binding.todoBtn.setOnClickListener {
             changeFragment(3)
         }
-//        binding.searchBtn.setOnClickListener {
-//            changeFragment(4)
-//        }
+        binding.searchBtn.setOnClickListener {
+            changeFragment(4)
+        }
 
     }
 

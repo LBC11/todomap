@@ -20,11 +20,15 @@ class UsersearchFragment : Fragment() {
 
     private lateinit var binding: FragmentUsersearchBinding
     lateinit var adapter: UsersearchAdapter
-    lateinit var users: ArrayList<UserAccount>
 
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseStorage: StorageReference
     private lateinit var database: DatabaseReference
+
+    private lateinit var userFriendRef: DatabaseReference
+    private lateinit var allUserRef: DatabaseReference
+
+    private var allUserUids: MutableList<String> = arrayListOf()
+    lateinit var users: ArrayList<UserAccount>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,13 +36,22 @@ class UsersearchFragment : Fragment() {
     ): View? {
         binding = FragmentUsersearchBinding.inflate(inflater, container, false)
 
-        // user 정보 가져오기
-        users = callUserAccounts()
+        firebaseAuth = FirebaseAuth.getInstance()
+        val currentUser = firebaseAuth.currentUser
+        val uid = currentUser?.uid.toString()
+        val email = currentUser?.email.toString()
 
-        // Realtime DB에서 결과 가져오기gh
+        database = FirebaseDatabase.getInstance().reference
+        userFriendRef = database.child("friend").child(uid)
+        allUserRef = database.child("userAccount")
+
+        // 모든 유저의 uid 가져오기
+        allUserUids = getallUserLists()
 
 
-        // Adapter
+
+
+        // Adapter > 검색할 때 모든 유저의 account 정보 넘겨줘야 함
         adapter = UsersearchAdapter(users, this)
         binding.userRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.userRecyclerView.adapter = adapter
@@ -59,27 +72,31 @@ class UsersearchFragment : Fragment() {
         return binding.root
     }
 
-    fun callUserAccounts(): ArrayList<UserAccount> {
-        var userList: ArrayList<UserAccount>
-        userList = ArrayList<UserAccount>(3)
-        database = FirebaseDatabase.getInstance().reference.child("userAccount")
+    private fun getallUserLists(): MutableList<String> {
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     Log.d(TAG, "success to load userAccount in DB")
-                    val tempHash = snapshot.value as HashMap<*, *>?
-                    tempHash?.forEach {
-                        var tmp = UserAccount()
-                        Log.d(TAG, it.toString())
-//                        tmp.userName = it.get("info").toString()
-//                        account.profileImgUrl = tempHash?.get("profileImgUrl").toString()
-//                        account.userName = tempHash?.get("userName").toString()
+                    val hash = snapshot.value as HashMap<*, *>?
+
+//                    유저 정보 변경 관련 event listner
+//                    if (allUserUids.isNotEmpty()) {
+//                        allUserUids.forEach {
+//                            // remove the existing listener
+//                            allUserRef.child(it)
+//                                .removeEventListener(accountListenerHashMap[it]!!)
+//                            friendsLocationRef.child(it)
+//                                .removeEventListener(locationListenerHashMap[it]!!)
 //
-//                        // email, username, info 설정
-//                        binding.userEmailText.text = account.email
-//                        binding.userNameText.setText(account.userName)
-//                        binding.info.setText(account.info)
+//                            // clear the hash map
+//                            accountListenerHashMap.clear()
+//                            locationListenerHashMap.clear()
+//                        }
+
+                    hash?.forEach {
+                        allUserUids.add(it.value.toString())
                     }
+
 
                 } else {
                     Log.d(TAG, "There are no userAccount in DB")
@@ -93,7 +110,6 @@ class UsersearchFragment : Fragment() {
             }
         })
 
-
-        return userList
+        return allUserUids
     }
 }
