@@ -25,6 +25,10 @@ import java.util.*
 
 class CalendarFragment : Fragment() {
 
+    companion object {
+        private const val TAG: String = "CalendarFragment"
+    }
+
     private lateinit var binding : FragmentCalendarBinding
     private val todoViewModel: TodoViewModel by viewModels()
     private lateinit var adapter: TodoListAdapter
@@ -69,7 +73,7 @@ class CalendarFragment : Fragment() {
             val cal = Calendar.getInstance()
             val timeSetListener = OnTimeSetListener { view, hourOfDay, minute ->
                 time = "${hourOfDay}:${minute}"
-                // calendar object를 알람에 사용
+                // calendar object 를 알람에 사용
                 cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
             }

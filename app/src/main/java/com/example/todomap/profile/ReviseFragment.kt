@@ -18,7 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import com.bumptech.glide.Glide
+import com.example.todomap.MainActivity
+import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.databinding.FragmentReviseBinding
 import com.example.todomap.user.UserAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -42,11 +46,15 @@ class ReviseFragment : Fragment() {
 
     private lateinit var account: UserAccount
 
-    // 갤러리에서 이미지 가져오는 launcher
-    private val requestLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) binding.reviseImg.setImageURI(it.data?.data)
+    private val mainActivity : MainActivity
+        get() {
+            return activity as MainActivity
         }
+
+    override fun onAttach(activity: Activity) { // Fragment 가 Activity 에 attach 될 때 호출된다.
+        context = activity as FragmentActivity
+        super.onAttach(activity)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,10 +67,10 @@ class ReviseFragment : Fragment() {
         val uid = currentUser?.uid.toString()
         val email = currentUser?.email.toString()
         account = UserAccount(uid, email, "name", "my info", "-")
-        getAccount(uid, email)
-
         database = FirebaseDatabase.getInstance().reference.child("userAccount").child(uid)
         firebaseStorage = FirebaseStorage.getInstance().reference
+
+        getAccount(uid, email)
 
 
         // 프로필 이미지 변경 설정 RequestPermission
@@ -86,18 +94,22 @@ class ReviseFragment : Fragment() {
             account.profileImgUrl = account.idToken + "_profileImg"
             database.setValue(account)
 
-            val imgBitmap = (binding.reviseImg.drawable as BitmapDrawable).bitmap
-            val baos = ByteArrayOutputStream()
-            imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val data = baos.toByteArray()
-            val storageReference = firebaseStorage.child(account.idToken + "_profileImg")
+            if (binding.reviseImg.drawable != null){
+                val imgBitmap = (binding.reviseImg.drawable as BitmapDrawable).bitmap
+                val baos = ByteArrayOutputStream()
+                imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
+                val storageReference = firebaseStorage.child(account.idToken + "_profileImg")
 
-            val uploadTask = storageReference.putBytes(data)
-            uploadTask.addOnFailureListener {
-                Log.d(TAG, "Image Upload Failure")
-            }.addOnSuccessListener {
-                Log.d(TAG, "Image Upload Success")
+                val uploadTask = storageReference.putBytes(data)
+                uploadTask.addOnFailureListener {
+                    Log.d(TAG, "Image Upload Failure")
+                }.addOnSuccessListener {
+                    Log.d(TAG, "Image Upload Success")
+                }
             }
+            mainActivity.changeFragment(1)
+
         }
 
         return binding.root
@@ -149,6 +161,12 @@ class ReviseFragment : Fragment() {
 
     // 갤러리에서 인텐트로 이미지 가져오기
     private fun pickImageFromGallery() {
+
+        // 갤러리에서 이미지 가져오는 launcher
+        val requestLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK) binding.reviseImg.setImageURI(it.data?.data)
+            }
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         requestLauncher.launch(intent)
