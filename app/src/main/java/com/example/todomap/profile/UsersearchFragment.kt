@@ -20,6 +20,7 @@ class UsersearchFragment : Fragment() {
 
     private lateinit var binding: FragmentUsersearchBinding
     lateinit var adapter: UsersearchAdapter
+    lateinit var layoutManager: LinearLayoutManager
 
     private var allUserUids: MutableList<String> = arrayListOf()
 
@@ -32,8 +33,10 @@ class UsersearchFragment : Fragment() {
 
         // Adapter > 검색할 때 모든 유저의 account 정보 넘겨줘야 함
         adapter = UsersearchAdapter(this)
-        binding.userRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.userRecyclerView.adapter = adapter
+
+        layoutManager = LinearLayoutManager(context)
+        binding.userRecyclerView.layoutManager = layoutManager
 
 //        Log.d(TAG, "Fragment${allUsers.toString()}")
 
