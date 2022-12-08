@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -71,11 +72,6 @@ class MainActivity : AppCompatActivity() {
                 delay(30000)
             }
         }
-
-
-//        fragmentManager.commit {
-//            add(binding.fragmentContainer.id, todoFrag)
-//        }
 
         fragmentManager.commit {
             add(binding.fragmentContainer.id, profileFrag)
