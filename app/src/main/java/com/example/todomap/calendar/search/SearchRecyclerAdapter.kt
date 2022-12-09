@@ -5,7 +5,7 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todomap.databinding.PlaceitemRecyclerBinding
 
-class SearchRecyclerAdapter: RecyclerView.Adapter<SearchRecyclerAdapter.SearchResultViewHolder>() {
+class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.SearchResultViewHolder>() {
 
     private var searchResultList: List<SearchResultEntity> = listOf()
     var currentPage = 1
@@ -13,12 +13,18 @@ class SearchRecyclerAdapter: RecyclerView.Adapter<SearchRecyclerAdapter.SearchRe
 
     private lateinit var searchResultClickListener: OnItemClickListener
 
-    inner class SearchResultViewHolder(private val binding: PlaceitemRecyclerBinding,
-                                       private val searchResultClickListener: (SearchResultEntity) -> Unit): RecyclerView.ViewHolder(binding.root){
-        fun bindData(data: SearchResultEntity){
+    inner class SearchResultViewHolder(
+        private val binding: PlaceitemRecyclerBinding,
+        private val searchResultClickListener: (SearchResultEntity) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bindData(data: SearchResultEntity) {
             binding.root.setOnClickListener {
                 searchResultClickListener(data)
             }
+        }
+
+        fun bindViews(data: SearchResultEntity) {
+//            binding.root.set
         }
     }
 

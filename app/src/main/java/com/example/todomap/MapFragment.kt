@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -121,7 +122,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun friendListListener() = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.exists()) {
-                val hash = snapshot.value as HashMap<*, *>?
+                val hash = snapshot.value as ArrayList<*>
                 if (friendsUid.isNotEmpty()) {
                     friendsUid.forEach {
                         // remove the existing listener
@@ -139,7 +140,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
 
                 hash?.forEach {
-                    friendsUid.add(it.value.toString())
+                    friendsUid.add(it.toString())
                 }
 
                 getFriendAccount()
