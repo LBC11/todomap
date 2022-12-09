@@ -10,7 +10,7 @@ class TodoListAdapter: RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
     private lateinit var todoList: ArrayList<TodoEntity>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

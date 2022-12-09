@@ -37,7 +37,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/withdrawBtn"
         app:layout_constraintTop_toBottomOf="@+id/view14"
-        app:layout_constraintVertical_weight="0.9" />
+        app:layout_constraintVertical_weight="1.15" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileMyImg"
@@ -53,7 +53,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/profileView"
         app:layout_constraintTop_toBottomOf="@+id/view10"
-        app:layout_constraintVertical_weight="3" />
+        app:layout_constraintVertical_weight="3.2" />
 
 
     <!--    <EditText-->
@@ -149,7 +149,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view7"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="1.2" />
 
     <View
         android:id="@+id/view13"
@@ -171,7 +171,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view5"
-        app:layout_constraintVertical_weight="2.5" />
+        app:layout_constraintVertical_weight="0.2" />
 
     <View
         android:id="@+id/view7"
@@ -182,7 +182,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileView"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="1.2" />
 
     <View
         android:id="@+id/view10"
@@ -190,22 +190,21 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/profileMyImg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="0.1" />
 
     <View
         android:id="@+id/view6"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="48dp"
         app:layout_constraintBottom_toTopOf="@+id/profileView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileMyImg"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="1.2" />
 
     <View
         android:id="@+id/profileView"
@@ -216,7 +215,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view6"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="1.2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,8 +10,8 @@
         android:id="@+id/reviseImg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginEnd="250dp"
         android:background="@android:color/transparent"
         android:src="@drawable/logo_todomap"
         app:circularflow_radiusInDP="500dp"
@@ -20,14 +20,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view21"
-        app:layout_constraintVertical_weight="3" />
+        app:layout_constraintVertical_weight="2.8" />
 
     <EditText
         android:id="@+id/editUserName"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:drawableStart="@drawable/box_transperant"
         android:drawablePadding="10dp"
@@ -45,7 +45,7 @@
         android:id="@+id/editUserDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:drawableStart="@drawable/box_transperant"
         android:drawablePadding="10dp"
         android:ems="10"
@@ -107,7 +107,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="0.5" />
 
     <View
         android:id="@+id/view22"
@@ -118,7 +118,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changeBtn"
-        app:layout_constraintVertical_weight="4" />
+        app:layout_constraintVertical_weight="0.5" />
 
     <View
         android:id="@+id/view23"
@@ -129,5 +129,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editUserDescription"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintVertical_weight="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

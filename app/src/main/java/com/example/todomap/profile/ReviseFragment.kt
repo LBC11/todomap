@@ -46,6 +46,12 @@ class ReviseFragment : Fragment() {
 
     private lateinit var account: UserAccount
 
+    // 갤러리에서 이미지 가져오는 launcher
+    val requestLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) binding.reviseImg.setImageURI(it.data?.data)
+        }
+
     private val mainActivity : MainActivity
         get() {
             return activity as MainActivity
@@ -161,12 +167,6 @@ class ReviseFragment : Fragment() {
 
     // 갤러리에서 인텐트로 이미지 가져오기
     private fun pickImageFromGallery() {
-
-        // 갤러리에서 이미지 가져오는 launcher
-        val requestLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == Activity.RESULT_OK) binding.reviseImg.setImageURI(it.data?.data)
-            }
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         requestLauncher.launch(intent)
