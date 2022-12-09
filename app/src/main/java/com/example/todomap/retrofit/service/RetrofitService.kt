@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitService {
 
     companion object {
-        private const val baseUrl = "http://203.246.85.178:8080/"
+        private const val baseUrl = "http://127.0.0.1:8081/"
 
         private var gson = GsonBuilder()
             .setLenient()

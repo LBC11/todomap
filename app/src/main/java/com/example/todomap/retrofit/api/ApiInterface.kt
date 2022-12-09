@@ -3,7 +3,6 @@ package com.example.todomap.retrofit.api
 import com.example.todomap.retrofit.model.TodoCreate
 import com.example.todomap.retrofit.model.TodoEntity
 import com.example.todomap.retrofit.model.TodoUpdate
-import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiInterface {

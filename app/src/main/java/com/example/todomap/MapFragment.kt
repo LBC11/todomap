@@ -39,9 +39,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         private const val TAG = "MapFragment"
         private const val DEFAULT_ZOOM = 15F
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
-        private const val GPS_ENABLE_REQUEST_CODE = 2001
-        private const val UPDATE_INTERVAL_MS = 1000 * 60 * 15 // 1분 단위 시간 갱신
-        private const val FASTEST_UPDATE_INTERVAL_MS = 1000 * 30 // 30초 단위로 화면 갱신
         private const val KEY_CAMERA_POSITION = "camera_position"
         private const val KEY_LOCATION = "location"
     }
@@ -57,10 +54,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
-    // Entry point to fused location provider
-//    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-//    private lateinit var locationRequest: LocationRequest
-
     private var currentMarker: Marker? = null
     private var currentLocation: Location? = null
     private var cameraPosition: Location? = null
@@ -75,7 +68,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var accountListenerHashMap = HashMap<String, ValueEventListener>()
 
     private val friendMarkerHashMap = HashMap<String, Marker>()
-//    private val todoMarkerHashMap = HashMap<String, Marker>()
+    private val todoMarkerHashMap = HashMap<String, Marker>()
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var currentUser: FirebaseUser
@@ -297,8 +290,42 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setFriendLocationMarker(uid: String, latlng: LatLng, markerTitle: String, markerSnippet: String) {
+    // if app can't get location, use the default location(=seoul)
+    private fun setDefaultLocationMarker() {
+        // delete existing marker
+        currentMarker?.remove()
+
         // Setting the marker for default location
+        val markerOptions = MarkerOptions()
+        markerOptions.position(defaultLocation)
+        markerOptions.title("위치정보 가져올 수 없음")
+        markerOptions.snippet("위치 퍼미션과 GPS 활성 여부 확인하세요")
+        markerOptions.draggable(true)
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+
+        // add the marker to map
+        currentMarker = map.addMarker(markerOptions)
+
+        // camera update to the default location marker
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM)
+        map.moveCamera(cameraUpdate)
+    }
+
+    private fun setTodoLocationMarker(uid: String, latlng: LatLng, markerTitle: String, markerSnippet: String) {
+        // Setting the marker
+        val markerOptions = MarkerOptions()
+        markerOptions.position(latlng)
+        markerOptions.title(markerTitle)
+        markerOptions.snippet(markerSnippet)
+        markerOptions.draggable(true)
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        // add the marker to map
+        todoMarkerHashMap[uid] = map.addMarker(markerOptions)!!
+    }
+
+    private fun setFriendLocationMarker(uid: String, latlng: LatLng, markerTitle: String, markerSnippet: String) {
+        // Setting the marker
         val markerOptions = MarkerOptions()
         markerOptions.position(latlng)
         markerOptions.title(markerTitle)
@@ -327,27 +354,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         // camera update to the default location marker
         val cameraUpdate = CameraUpdateFactory.newLatLng(latlng)
-        map.moveCamera(cameraUpdate)
-    }
-
-    // if app can't get location, use the default location(=seoul)
-    private fun setDefaultLocationMarker() {
-        // delete existing marker
-        currentMarker?.remove()
-
-        // Setting the marker for default location
-        val markerOptions = MarkerOptions()
-        markerOptions.position(defaultLocation)
-        markerOptions.title("위치정보 가져올 수 없음")
-        markerOptions.snippet("위치 퍼미션과 GPS 활성 여부 확인하세요")
-        markerOptions.draggable(true)
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-
-        // add the marker to map
-        currentMarker = map.addMarker(markerOptions)
-
-        // camera update to the default location marker
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM)
         map.moveCamera(cameraUpdate)
     }
 
@@ -384,24 +390,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return addressStringBuilder.toString()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        // Fragment 에서의 OnCreateView 를 마치고, Activity 에서 onCreate()가 호출되고 나서 호출되는 메소드이다.
-        // Activity 와 Fragment 의 뷰가 모두 생성된 상태로, View 를 변경하는 작업이 가능한 단계다.
-        super.onActivityCreated(savedInstanceState)
-        //액티비티가 처음 생성될 때 실행되는 함수
-        MapsInitializer.initialize(context)
-//        locationRequest = LocationRequest()
-//            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY) // 정확도를 최우선적으로 고려
-//            .setInterval(UPDATE_INTERVAL_MS.toLong()) // 위치가 Update 되는 주기
-//            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS.toLong()) // 위치 획득후 업데이트되는 주기
-//        val builder = LocationSettingsRequest.Builder()
-//        builder.addLocationRequest(locationRequest)
-
-        // FusedLocationProviderClient 객체 생성
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         map.let {
             outState.putParcelable(KEY_CAMERA_POSITION, it.cameraPosition)
@@ -411,6 +399,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        MapsInitializer.initialize(context)
         map = googleMap
         setDefaultLocationMarker() // location 정보를 얻지 못할 때를 대비해서 default location 에 따라 설정.
         getLocationPermission() // location permission 요청
@@ -418,7 +407,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         getUserAccount(currentUser.uid) // generate marker for the user's location in real-time.
         getFriendList() // generate marker for the friends location in real-time.
 
-//        getDeviceLocation() // user's location 에 따라 현재 위치 정보 설정
     }
 
     // if the location permission is granted, activate the user's location.
@@ -440,38 +428,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             e.message?.let { Log.e("Exception: %s", it) }
         }
     }
-
-    // location request 에 성공하면 진행되는 프로세스
-//    private var locationCallback: LocationCallback = object : LocationCallback() {
-//        override fun onLocationResult(locationResult: LocationResult) {
-//            super.onLocationResult(locationResult)
-//
-//            // result 를 list 로 받음
-//            val locationList = locationResult.locations
-//
-//            // list 가 비어있지 않다면 location 설정
-//            if (locationList.size > 0) {
-//
-//                // 가장 최신 location 사용
-//                val location = locationList[locationList.size - 1]
-//                val currentPosition = LatLng(location.latitude, location.longitude)
-//                val markerTitle = getCurrentAddress(currentPosition)
-//                val markerSnippet = "위도:" + location.latitude.toString() + " 경도:" + location.longitude.toString()
-//
-//                //현재 위치에 마커 생성하고 이동
-//                setCurrentLocation(location, markerTitle, markerSnippet)
-//                currentLocation = location
-//            }
-//        }
-//    }
-
-//    private fun getDeviceLocation() {
-//        try {
-//            if (locationPermissionGranted) fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
-//        } catch (e: SecurityException) {
-//            Log.e("Exception: %s", e.message!!)
-//        }
-//    }
 
     // Check location permissions
     private fun getLocationPermission() {
@@ -503,15 +459,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         updateLocationUI()
     }
 
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    fun checkLocationServicesStatus(): Boolean {
-//        val locationManager =
-//            requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
-//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-//            LocationManager.NETWORK_PROVIDER
-//        )
-//    }
-
     override fun onStart() { // 유저에게 Fragment 가 보이도록 해준다.
         super.onStart()
         mapView.onStart()
@@ -522,7 +469,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStop()
         mapView.onStop()
         Log.d(TAG, "onStop : removeLocationUpdates")
-//        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() { // 유저에게 Fragment 가 보여지고, 유저와 상호작용이 가능하게 되는 부분
@@ -543,7 +489,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 permissionLauncher.launch(ACCESS_FINE_LOCATION)
                 return
             }
-//            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
             map.isMyLocationEnabled = true
         }
     }
@@ -561,7 +506,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() { // 프래그먼트와 관련된 View 가 제거되는 단계
         super.onDestroyView()
         Log.d(TAG, "onDestroyView : removeLocationUpdates")
-//        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onDestroy() {
