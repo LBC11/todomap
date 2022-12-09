@@ -159,7 +159,7 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
                 results.count = allUsers.size
                 Log.d(TAG, " Adapter: results ${results.values}")
                 return results
-            } else if (filterString.trim { it <= ' ' }.length >= 2) {
+            } else if (filterString.trim { it <= ' ' }.length >= 1) {
                 Log.d(TAG, " Adapter: filteredString ${filterString.trim { it <= ' ' }}")
                 //공백 제외 2글자이상인 경우 검색
                 for (user in allUsers) {

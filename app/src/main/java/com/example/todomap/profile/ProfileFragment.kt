@@ -122,6 +122,7 @@ class ProfileFragment : Fragment() {
                     // email, username, info 설정
                     binding.userEmailText.text = account.email
                     binding.userNameText.text = account.userName
+                    binding.userinfoText.text = account.info
 
                     // 프로필 사진 받아오기
                     getImage()
