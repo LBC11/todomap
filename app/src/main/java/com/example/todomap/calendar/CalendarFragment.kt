@@ -17,6 +17,7 @@ import com.example.todomap.databinding.FragmentCalendarBinding
 import com.example.todomap.retrofit.model.TodoCreate
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -73,6 +74,7 @@ class CalendarFragment : Fragment() {
             val cal = Calendar.getInstance()
             val timeSetListener = OnTimeSetListener { view, hourOfDay, minute ->
                 time = "${hourOfDay}:${minute}"
+                Log.d(TAG, "time picker: ${time}")
                 // calendar object 를 알람에 사용
                 cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -90,9 +92,7 @@ class CalendarFragment : Fragment() {
 
         binding.todoAddBtn.setOnClickListener {
             val description = binding.todoEditText.text.toString()
-            // time
-            // location
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.IO) {
                 val date = todoViewModel.date.value!!
                 todoViewModel.insert(TodoCreate(uid, date, time, locLatitude , locLongitude , description))
             }

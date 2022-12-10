@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.databinding.ActivityMainBinding
 import com.example.todomap.profile.ProfileFragment
 import com.example.todomap.profile.ReviseFragment
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var profileFrag = ProfileFragment()
     private var mapFrag = MapFragment()
 
-    //    private var todoFrag = CalendarFragment()
+    private var todoFrag = CalendarFragment()
     private var searchFrag = UsersearchFragment()
     private var reviseFrag = ReviseFragment()
 
@@ -115,13 +116,13 @@ class MainActivity : AppCompatActivity() {
                     replace(binding.fragmentContainer.id, mapFrag)
                 }
             }
-//            3 -> {
-//                fragmentManager.commit {
-//                    setReorderingAllowed(true)
-//                    addToBackStack(null)
-//                    replace(binding.fragmentContainer.id, todoFrag)
-//                }
-//            }
+            3 -> {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, todoFrag)
+                }
+            }
             4 -> {
                 fragmentManager.commit {
                     setReorderingAllowed(true)
