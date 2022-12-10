@@ -3,8 +3,6 @@ package com.example.todomap
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -31,7 +28,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -123,14 +119,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         accountRef = database.child("userAccount")
 
         lifecycleScope.launch(Dispatchers.IO) {
-            todoViewModel.getAllByDate(uid, getCurrentDate()).forEach {
 
-                if(todoMarkerHashMap.containsKey(it.id.toString())) {
-                    todoMarkerHashMap
+            if(todoMarkerHashMap.isNotEmpty()) {
+                todoMarkerHashMap.forEach {
+                    it.value.remove()
                 }
 
+                todoMarkerHashMap.clear()
+            }
+
+            todoViewModel.getAllByDate(uid, getCurrentDate()).forEach {
                 val tempLatlng = LatLng(it.locLatitude, it.locLongitude)
-                setTodoLocationMarker(it.id.toString(), tempLatlng , it.locName, getCurrentAddress(tempLatlng))
+                setTodoLocationMarker(it.id.toString(), tempLatlng , it.locName)
             }
         }
 
@@ -368,13 +368,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map.moveCamera(cameraUpdate)
     }
 
-    private fun setTodoLocationMarker(id: String, latlng: LatLng, markerTitle: String, markerSnippet: String) {
+    private fun setTodoLocationMarker(id: String, latlng: LatLng, markerTitle: String) {
 
         // Setting the marker for default location
         val markerOptions = MarkerOptions()
         markerOptions.position(latlng)
         markerOptions.title(markerTitle)
-        markerOptions.snippet(markerSnippet)
         markerOptions.draggable(true)
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
@@ -383,37 +382,37 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     // 위도와 경도를 읽고 Location 의 주소 return for maker's title
-    private fun getCurrentAddress(latlng: LatLng): String {
-        // 위치 정보와 지역으로부터 주소 문자열을 구한다.
-        val addressList: List<Address>?
-        val geocoder = Geocoder(context, Locale.getDefault())
-        // 지오코더를 이용하여 주소 리스트를 구한다.
-        addressList = try {
-            geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1)
-        } catch (e: IOException) {
-            Toast.makeText(
-                context,
-                "위치로부터 주소를 인식할 수 없습니다. 네트워크가 연결되어 있는지 확인해 주세요.",
-                Toast.LENGTH_SHORT
-            ).show()
-            e.printStackTrace()
-            return "주소 인식 불가"
-        }
-        if (addressList != null) {
-            if (addressList.isEmpty()) { // 주소 리스트가 비어있는지 비어 있으면
-                return "해당 위치에 주소 없음"
-            }
-        }
-
-        // 주소를 담는 문자열을 생성하고 리턴
-        val address: Address = addressList!![0]
-        val addressStringBuilder = StringBuilder()
-        for (i in 0..address.maxAddressLineIndex) {
-            addressStringBuilder.append(address.getAddressLine(i))
-            if (i < address.maxAddressLineIndex) addressStringBuilder.append("\n")
-        }
-        return addressStringBuilder.toString()
-    }
+//    private fun getCurrentAddress(latlng: LatLng): String {
+//        // 위치 정보와 지역으로부터 주소 문자열을 구한다.
+//        val addressList: List<Address>?
+//        val geocoder = Geocoder(context, Locale.getDefault())
+//        // 지오코더를 이용하여 주소 리스트를 구한다.
+//        addressList = try {
+//            geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1)
+//        } catch (e: IOException) {
+//            Toast.makeText(
+//                context,
+//                "위치로부터 주소를 인식할 수 없습니다. 네트워크가 연결되어 있는지 확인해 주세요.",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            e.printStackTrace()
+//            return "주소 인식 불가"
+//        }
+//        if (addressList != null) {
+//            if (addressList.isEmpty()) { // 주소 리스트가 비어있는지 비어 있으면
+//                return "해당 위치에 주소 없음"
+//            }
+//        }
+//
+//        // 주소를 담는 문자열을 생성하고 리턴
+//        val address: Address = addressList!![0]
+//        val addressStringBuilder = StringBuilder()
+//        for (i in 0..address.maxAddressLineIndex) {
+//            addressStringBuilder.append(address.getAddressLine(i))
+//            if (i < address.maxAddressLineIndex) addressStringBuilder.append("\n")
+//        }
+//        return addressStringBuilder.toString()
+//    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         map.let {
