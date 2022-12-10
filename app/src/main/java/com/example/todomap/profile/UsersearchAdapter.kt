@@ -48,13 +48,11 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
 
         // 모든 유저의 uid 가져오기
         getallUserLists()
-//        users.addAll(context.allUsers)
-//        filteredUser.addAll(context.allUsers)
-//        Log.d(TAG, " Adapter: $filteredUser")
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersearchAdapter.ViewHolder {
+        Log.d(TAG, "ViewHolder Binding")
         val binding = UseritemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }

@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view12"
-        app:layout_constraintVertical_weight="2.5" />
+        app:layout_constraintVertical_weight="2" />
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@+id/todoEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintTop_toBottomOf="@+id/friendRecyclerView"
         app:layout_constraintVertical_weight="4" />
 
     <EditText
@@ -49,8 +49,8 @@
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
         app:layout_constraintVertical_weight="1" />
 
-    <View
-        android:id="@+id/view2"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friendRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/calendarView"
@@ -58,7 +58,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="0.4" />
+        app:layout_constraintVertical_weight="1" />
 
     <View
         android:id="@+id/view11"
@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todoRecyclerView"
-        app:layout_constraintVertical_weight="0.2" />
+        app:layout_constraintVertical_weight="0.1" />
 
     <View
         android:id="@+id/view12"
@@ -79,7 +79,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todoEditText"
-        app:layout_constraintVertical_weight="0.5" />
+        app:layout_constraintVertical_weight="0.2
+" />
 
     <Button
         android:id="@+id/todoAddBtn"

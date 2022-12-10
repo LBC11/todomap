@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calendar.CalendarFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectedTodoRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/view11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectedCalendarView"
+        app:layout_constraintVertical_weight="3" />
+
+    <CalendarView
+        android:id="@+id/selectedCalendarView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/selectedTodoRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view42"
+        app:layout_constraintVertical_weight="4" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/todoEditText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginEnd="24dp"-->
+<!--        android:background="@drawable/todo_input"-->
+<!--        android:ems="10"-->
+<!--        android:hint="  Input"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/view12"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/calendarView"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/calendarView"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/calendarView"-->
+<!--        app:layout_constraintVertical_weight="0.8" />-->
+
+    <View
+        android:id="@+id/view42"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/selectedCalendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectedTodoRecyclerView"
+        app:layout_constraintVertical_weight="0.4" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/selectedfriendImg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/logo_todomap"
+        app:circularflow_radiusInDP="500dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view42"
+        app:layout_constraintEnd_toStartOf="@+id/selectedUserName"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view42" />
+
+    <TextView
+        android:id="@+id/selectedUserName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textColor="#353535"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/selectedUserInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="6"
+        app:layout_constraintStart_toEndOf="@+id/selectedfriendImg"
+        app:layout_constraintTop_toTopOf="@+id/selectedfriendImg" />
+
+    <TextView
+        android:id="@+id/selectedUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/selectedfriendImg"
+        app:layout_constraintStart_toStartOf="@+id/selectedUserName"
+        app:layout_constraintTop_toBottomOf="@+id/selectedUserName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
