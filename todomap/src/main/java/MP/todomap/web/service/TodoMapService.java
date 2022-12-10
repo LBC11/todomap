@@ -40,7 +40,7 @@ public class TodoMapService {
     public void update(Long id, TodoUpdateDto updateDto) {
         Todo todo = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("update error!!! id:"+id));
-        todo.update(updateDto.getUid(), updateDto.getDate(), updateDto.getTime(), updateDto.getLocLatitude(), updateDto.getLocLongitude(), updateDto.getDescription());
+        todo.update(updateDto.getUid(), updateDto.getDate(), updateDto.getTime(), updateDto.getLocName(), updateDto.getLocLatitude(), updateDto.getLocLongitude(), updateDto.getDescription());
     }
 
     @Transactional

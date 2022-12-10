@@ -12,6 +12,7 @@ public class TodoReadDto {
     private String uid;
     private String date;
     private String time;
+    private String locName;
     private String locLatitude;
     private String locLongitude;
     private String description;
@@ -21,6 +22,7 @@ public class TodoReadDto {
         this.uid = todo.getUid();
         this.date = todo.getDate();
         this.time = todo.getTime();
+        this.locName = todo.getLocName();
         this.locLatitude = todo.getLocLatitude();
         this.locLongitude = todo.getLocLongitude();
         this.description = todo.getDescription();

@@ -25,6 +25,9 @@ public class Todo {
     private String time;
 
     @Column(nullable = false)
+    private String locName;
+
+    @Column(nullable = false)
     private String locLatitude;
 
     @Column(nullable = false)
@@ -34,23 +37,25 @@ public class Todo {
     private String description;
 
     @Builder
-    public Todo(String uid, String date, String time,
+    public Todo(String uid, String date, String time, String locName,
                 String locLatitude, String locLongitude,
                 String description) {
         this.uid = uid;
         this.date = date;
         this.time = time;
+        this.locName = locName;
         this.locLatitude = locLatitude;
         this.locLongitude = locLongitude;
         this.description = description;
     }
 
-    public void update(String uid, String date, String time,
+    public void update(String uid, String date, String time, String locName,
                        String locLatitude, String locLongitude,
                        String description) {
         this.uid = uid;
         this.date = date;
         this.time = time;
+        this.locName = locName;
         this.locLatitude = locLatitude;
         this.locLongitude = locLongitude;
         this.description = description;
