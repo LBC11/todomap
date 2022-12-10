@@ -1,13 +1,15 @@
 package com.example.todomap.calendar
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todomap.databinding.TodoitemRecyclerBinding
 import com.example.todomap.retrofit.model.TodoEntity
 
-class TodoListAdapter(): RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
+class TodoListAdapter(val todoViewModel: TodoViewModel): RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
     private var todoList =  ArrayList<TodoEntity>()
+    private val TAG = "TodoListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -40,6 +42,9 @@ class TodoListAdapter(): RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
 
             // 뷰모델 넘겨주기 가능 ?
             binding.todoDeleteBtn.setOnClickListener {
+                Log.d(TAG, "${todo.id}")
+
+//                todoViewModel.delete(todo.id)
 
             }
 

@@ -53,14 +53,14 @@ class TodoRepository() {
         }
     }
 
-    //
-//    fun getAll(uid: String): List<TodoEntity>{
-//        var result = emptyList<TodoEntity>()
-//        runBlocking {
-//            this.launch {
-//                result = RetrofitService.todoService.getTodos(uid)
-//            }
-//        }
-//        return result
-//    }
+
+    fun getAll(uid: String): List<TodoEntity>{
+        var result = emptyList<TodoEntity>()
+        runBlocking {
+            this.launch {
+                result = RetrofitService.todoService.getTodos(uid)
+            }
+        }
+        return result
+    }
 }

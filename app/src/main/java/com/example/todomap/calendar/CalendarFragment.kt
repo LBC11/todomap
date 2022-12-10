@@ -86,6 +86,7 @@ class CalendarFragment : Fragment() {
         //위치 설정
         val locLatitude = 0.0
         val locLongitude = 0.0
+        val locationName = ""
         binding.setLocaBtn.setOnClickListener {
 
         }
@@ -102,7 +103,7 @@ class CalendarFragment : Fragment() {
 
     private fun setRecyclerView(recyclerView: RecyclerView){
         val dateOfToday = getTodayOfDate()
-        adapter = TodoListAdapter()
+        adapter = TodoListAdapter(todoViewModel)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
         todoViewModel.updateDate(dateOfToday)
