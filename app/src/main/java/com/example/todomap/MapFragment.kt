@@ -17,9 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.example.todomap.calendar.TodoViewModel
 import com.example.todomap.databinding.FragmentMapBinding
+import com.example.todomap.retrofit.model.TodoEntity
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
@@ -67,6 +69,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var friendsUid: MutableList<String> = arrayListOf()
     private var locationListenerHashMap = HashMap<String, ValueEventListener>()
     private var accountListenerHashMap = HashMap<String, ValueEventListener>()
+    private var todoList: MutableList<TodoEntity> = arrayListOf()
+
 
     private val friendMarkerHashMap = HashMap<String, Marker>()
     private val todoMarkerHashMap = HashMap<String, Marker>()
@@ -79,6 +83,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var friendRef: DatabaseReference
     private lateinit var locationRef: DatabaseReference
     private lateinit var accountRef: DatabaseReference
+
+    private var flag = MutableLiveData<Boolean>()
 
     override fun onAttach(activity: Activity) { // Fragment 가 Activity 에 attach 될 때 호출된다.
         context = activity as FragmentActivity
@@ -124,13 +130,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 todoMarkerHashMap.forEach {
                     it.value.remove()
                 }
-
                 todoMarkerHashMap.clear()
             }
 
             todoViewModel.getAllByDate(uid, getCurrentDate()).forEach {
-                val tempLatlng = LatLng(it.locLatitude, it.locLongitude)
-                setTodoLocationMarker(it.id.toString(), tempLatlng , it.locName)
+                todoList.add(it)
+            }
+        }
+
+        flag.observe(viewLifecycleOwner) {
+            if(it == false) {
+                todoList.forEach {
+                    val tempLatlng = LatLng(it.locLatitude, it.locLongitude)
+                    setTodoLocationMarker(it.id.toString(), tempLatlng , it.locName)
+                }
+                flag.postValue(true)
             }
         }
 

@@ -86,7 +86,7 @@ class CalendarFriendFragment(val uid: String) : Fragment() {
         todoViewModel.date.observe(viewLifecycleOwner) {
             Log.d(TAG, it.toString())
             lifecycleScope.launch {
-                todoViewModel.getAllByDate(uid, it.toString()).observe(viewLifecycleOwner) { todoList ->
+                todoViewModel.getAllByDateLive(uid, it.toString()).observe(viewLifecycleOwner) { todoList ->
                     if (todoList != null) {
                         // Adapter 데이터 갱신
                         adapter.setTodoList(todoList)

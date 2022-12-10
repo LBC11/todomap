@@ -59,7 +59,6 @@ class CalendarFragment : Fragment() {
 
         Log.d("Friends", "Calendar ${friendsAdapter.itemCount}")
 
-
         //date LiveDate 변경 감지
         todoViewModel.date.observe(viewLifecycleOwner) {
             Log.d(TAG, it.toString())
