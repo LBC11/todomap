@@ -128,7 +128,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun friendListListener() = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.exists()) {
-                val hash = snapshot.value as HashMap<*, *>?
+                val hash = snapshot.value as ArrayList<*>?
                 if (friendsUid.isNotEmpty()) {
                     friendsUid.forEach {
                         // remove the existing listener
