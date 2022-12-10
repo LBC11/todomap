@@ -28,7 +28,11 @@ class TodoViewModel: ViewModel() {
         repository.delete(id)
     }
 
-    suspend fun getAllByDate(uid: String, date: String): LiveData<List<TodoEntity>> {
+    suspend fun getAllByDateLive(uid: String, date: String): LiveData<List<TodoEntity>> {
+        return repository.getAllByDateLive(uid, date)
+    }
+
+    suspend fun getAllByDate(uid: String, date: String): List<TodoEntity> {
         return repository.getAllByDate(uid, date)
     }
 

@@ -18,11 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import com.bumptech.glide.Glide
 import com.example.todomap.MainActivity
-import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.databinding.FragmentReviseBinding
 import com.example.todomap.user.UserAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -33,7 +30,10 @@ import java.io.ByteArrayOutputStream
 
 class ReviseFragment : Fragment() {
 
-    private val TAG: String = "ProfileFragment"
+    companion object {
+        private const val TAG: String = "ProfileFragment"
+        private const val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001
+    }
 
     private lateinit var context: FragmentActivity
     private lateinit var binding: FragmentReviseBinding
@@ -42,12 +42,12 @@ class ReviseFragment : Fragment() {
     private lateinit var firebaseStorage: StorageReference
     private lateinit var database: DatabaseReference
 
-    private val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001
+
 
     private lateinit var account: UserAccount
 
     // 갤러리에서 이미지 가져오는 launcher
-    val requestLauncher =
+    private val requestLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) binding.reviseImg.setImageURI(it.data?.data)
         }
@@ -65,7 +65,7 @@ class ReviseFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentReviseBinding.inflate(inflater, container, false)
         firebaseAuth = FirebaseAuth.getInstance()
 

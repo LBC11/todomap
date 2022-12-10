@@ -19,26 +19,28 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<UsersearchAdapter.ViewHolder>(), Filterable {
+class UsersearchAdapter(var context: UsersearchFragment) :
+    RecyclerView.Adapter<UsersearchAdapter.ViewHolder>(), Filterable {
 
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var database: DatabaseReference
-    private lateinit var firebaseStorage: StorageReference
-    private lateinit var userFriendRef: DatabaseReference
-    private lateinit var allUserRef: DatabaseReference
+    companion object {
+        private const val TAG: String = "Usersearch"
+    }
+
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var database: DatabaseReference
+    private var firebaseStorage: StorageReference = FirebaseStorage.getInstance().reference
+    private var userFriendRef: DatabaseReference
+    private var allUserRef: DatabaseReference
 
     var allUsers: ArrayList<UserAccount> = arrayListOf()
     var myUid = ""
 
-    private var friendsUid : ArrayList<String> = arrayListOf()
+    private var friendsUid: ArrayList<String> = arrayListOf()
     private var filteredUser = ArrayList<UserAccount>()
     private var itemFilter = ItemFilter()
-    val TAG = "Usersearch"
 
-    //filteredUser에 추가
+    //filteredUser 에 추가
     init {
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance().reference
         val currentUser = firebaseAuth.currentUser
         myUid = currentUser?.uid.toString()
 
@@ -51,9 +53,13 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersearchAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): UsersearchAdapter.ViewHolder {
         Log.d(TAG, "ViewHolder Binding")
-        val binding = UseritemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            UseritemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -67,8 +73,9 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
     }
 
 
-    inner class ViewHolder(private val binding: UseritemRecyclerBinding): RecyclerView.ViewHolder(binding.root){
-        fun setUI(user: UserAccount){
+    inner class ViewHolder(private val binding: UseritemRecyclerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun setUI(user: UserAccount) {
             // user 정보 띄우기
             Log.d(TAG, " Adapter: setUI ${user.userName}")
             binding.userName.text = user.userName
@@ -79,7 +86,11 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
                     if (it.isSuccessful) {
                         Glide.with(context).load(it.result).into(binding.profileImg)
                     } else {
-                        Toast.makeText(context as FragmentActivity, it.exception!!.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context as FragmentActivity,
+                            it.exception!!.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             binding.view27.setOnClickListener {
@@ -91,27 +102,38 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
                     .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
                         userFriendRef.addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()){
+                                if (snapshot.exists()) {
                                     Log.d(TAG, "Successful Access in friends DB")
                                     //친구 목록 리스트 생성
-                                    snapshot.children.forEach{
+                                    snapshot.children.forEach {
 //                                        val hash = it.value as HashMap<*, *>?
                                         friendsUid.add(it.value.toString())
                                     }
                                     Log.d(TAG, "FriendsUid ${friendsUid}")
                                     //친구추가
-                                    if (friendsUid.contains(user.idToken)){
+                                    if (friendsUid.contains(user.idToken)) {
                                         // 이미 친구일 때
-                                        Toast.makeText(binding.root.context, "Already friend with ${user.userName}!", Toast.LENGTH_SHORT).show()
-                                    } else if (user.idToken == myUid){
-                                        Toast.makeText(binding.root.context, "Can't be friend with myself!", Toast.LENGTH_SHORT).show()
-                                    }
-                                    else{
+                                        Toast.makeText(
+                                            binding.root.context,
+                                            "Already friend with ${user.userName}!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else if (user.idToken == myUid) {
+                                        Toast.makeText(
+                                            binding.root.context,
+                                            "Can't be friend with myself!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
                                         // 친구 추가
 //                                        friendsUid.clear()
                                         friendsUid.add(user.idToken)
                                         userFriendRef.setValue(friendsUid)
-                                        Toast.makeText(binding.root.context, "Add ${user.userName} to new friend!", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            binding.root.context,
+                                            "Add ${user.userName} to new friend!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
 
                                 } else {
@@ -119,7 +141,11 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
                                     Log.d(TAG, "There are no friend in DB")
                                     friendsUid.add(user.idToken)
                                     userFriendRef.setValue(friendsUid)
-                                    Toast.makeText(binding.root.context, "Add ${user.userName} to new friend!", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        binding.root.context,
+                                        "Add ${user.userName} to new friend!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
 
@@ -141,7 +167,7 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
         return itemFilter
     }
 
-    inner class ItemFilter: Filter(){
+    inner class ItemFilter : Filter() {
 
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filterString = constraint.toString()
@@ -172,37 +198,39 @@ class UsersearchAdapter(var context: UsersearchFragment) : RecyclerView.Adapter<
 
             return results
         }
-        
+
         // 결과 보여주깅
         @SuppressLint("NotifyDataSetChanged")
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             filteredUser.clear()
             filteredUser.addAll(results?.values as ArrayList<UserAccount>)
-            Log.d(TAG, " Adapter: publish filteredUser ${results?.values}")
+            Log.d(TAG, " Adapter: publish filteredUser ${results.values}")
             Log.d(TAG, " Adapter: publish filteredUser $filteredUser")
             notifyDataSetChanged()
         }
 
     }
 
-    private fun getallUserLists(){
+    private fun getallUserLists() {
         allUserRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     Log.d(TAG, "success to load userAccount in DB")
 
-                    snapshot.children?.forEach{
-//                        Log.d(TAG, it.toString())
+                    snapshot.children.forEach {
+                        //                        Log.d(TAG, it.toString())
                         val hash = it.value as HashMap<*, *>?
-//                        Log.d(TAG, hash?.get("idToken").toString())
+                        //                        Log.d(TAG, hash?.get("idToken").toString())
 
-//                        allUserUids.add(hash?.get("idToken").toString())
-                        allUsers.add(UserAccount(hash?.get("idToken").toString(),
-                            hash?.get("email").toString(),
-                            hash?.get("userName").toString(),
-                            hash?.get("info").toString(),
-                            hash?.get("profileImgUrl").toString(),
-                        )
+                        //                        allUserUids.add(hash?.get("idToken").toString())
+                        allUsers.add(
+                            UserAccount(
+                                hash?.get("idToken").toString(),
+                                hash?.get("email").toString(),
+                                hash?.get("userName").toString(),
+                                hash?.get("info").toString(),
+                                hash?.get("profileImgUrl").toString(),
+                            )
                         )
                     }
 

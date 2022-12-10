@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todomap.databinding.TodoitemRecyclerBinding
 import com.example.todomap.retrofit.model.TodoEntity
 
-class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFragment): RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
+class FriendTodoListAdapter(val todoViewModel: TodoViewModel): RecyclerView.Adapter<FriendTodoListAdapter.ViewHolder>() {
     private var todoList =  ArrayList<TodoEntity>()
     private val TAG = "TodoListAdapter"
 
@@ -41,14 +41,6 @@ class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFra
             binding.alartTimeView.text = todo.time
 //            binding.alartLocationView.text = 위치 이름으로 바꿔줘야 함
 
-            // 뷰모델 넘겨주기 가능 ?
-            binding.todoDeleteBtn.setOnClickListener {
-                Log.d(TAG, "${todo.id}")
-
-
-//                todoViewModel.delete(todo.id)
-
-            }
 
         }
     }

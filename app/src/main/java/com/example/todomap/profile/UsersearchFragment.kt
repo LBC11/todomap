@@ -1,7 +1,6 @@
 package com.example.todomap.profile
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +8,8 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todomap.databinding.FragmentUsersearchBinding
-import com.example.todomap.user.UserAccount
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import com.google.firebase.storage.StorageReference
 
 class UsersearchFragment : Fragment() {
-
-    private val TAG: String = "Usersearch"
 
     private lateinit var binding: FragmentUsersearchBinding
     lateinit var adapter: UsersearchAdapter
@@ -24,11 +17,10 @@ class UsersearchFragment : Fragment() {
 
     private var allUserUids: MutableList<String> = arrayListOf()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentUsersearchBinding.inflate(inflater, container, false)
 
         // Adapter > 검색할 때 모든 유저의 account 정보 넘겨줘야 함

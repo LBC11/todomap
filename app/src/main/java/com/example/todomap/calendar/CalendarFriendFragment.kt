@@ -33,7 +33,7 @@ class CalendarFriendFragment(val uid: String) : Fragment() {
     private lateinit var context: FragmentActivity
     private lateinit var binding : FragmentCalendarFriendBinding
     private val todoViewModel: TodoViewModel by viewModels()
-    private lateinit var adapter: TodoListAdapter
+    private lateinit var adapter: FriendTodoListAdapter
 
     private lateinit var friendRef: DatabaseReference
     private var firebaseStorage = FirebaseStorage.getInstance().reference
@@ -108,7 +108,7 @@ class CalendarFriendFragment(val uid: String) : Fragment() {
 
     private fun setRecyclerView(recyclerView: RecyclerView){
         val dateOfToday = getTodayOfDate()
-        adapter = TodoListAdapter(todoViewModel)
+        adapter = FriendTodoListAdapter(todoViewModel)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
         todoViewModel.updateDate(dateOfToday)

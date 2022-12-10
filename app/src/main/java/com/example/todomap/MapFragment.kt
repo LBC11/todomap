@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.todomap.calendar.TodoViewModel
 import com.example.todomap.databinding.FragmentMapBinding
 import com.google.android.gms.location.*
@@ -28,8 +29,12 @@ import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -39,9 +44,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         private const val TAG = "MapFragment"
         private const val DEFAULT_ZOOM = 15F
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
-        private const val GPS_ENABLE_REQUEST_CODE = 2001
-        private const val UPDATE_INTERVAL_MS = 1000 * 60 * 15 // 1분 단위 시간 갱신
-        private const val FASTEST_UPDATE_INTERVAL_MS = 1000 * 30 // 30초 단위로 화면 갱신
         private const val KEY_CAMERA_POSITION = "camera_position"
         private const val KEY_LOCATION = "location"
     }
@@ -57,12 +59,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
-    // Entry point to fused location provider
-//    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-//    private lateinit var locationRequest: LocationRequest
-
     private var currentMarker: Marker? = null
-    private var currentLocation: Location? = null
+    private var currentLatlng: LatLng? = null
     private var cameraPosition: Location? = null
 
     // defaultLocation: Seoul
@@ -75,7 +73,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var accountListenerHashMap = HashMap<String, ValueEventListener>()
 
     private val friendMarkerHashMap = HashMap<String, Marker>()
-//    private val todoMarkerHashMap = HashMap<String, Marker>()
+    private val todoMarkerHashMap = HashMap<String, Marker>()
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var currentUser: FirebaseUser
@@ -97,7 +95,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         savedInstanceState?.let {
-            currentLocation = it.getParcelable(KEY_LOCATION)
+            currentLatlng = it.getParcelable(KEY_LOCATION)
             cameraPosition = it.getParcelable(KEY_CAMERA_POSITION)
         }
         binding = FragmentMapBinding.inflate(inflater, container, false)
@@ -107,10 +105,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         binding.mapView.getMapAsync(this)
 
+        binding.myLocaBtn.setOnClickListener {
+            if (currentLatlng != null) {
+                val cameraUpdate = CameraUpdateFactory.newLatLng(currentLatlng!!)
+                map.moveCamera(cameraUpdate)
+            }
+        }
+
         firebaseAuth = FirebaseAuth.getInstance()
         currentUser = firebaseAuth.currentUser!!
-        val uid = currentUser?.uid.toString()
-        val email = currentUser?.email.toString()
+        val uid = currentUser.uid.toString()
 
         database = FirebaseDatabase.getInstance().reference
         userLocationRef = database.child("location").child(uid)
@@ -118,7 +122,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         locationRef = database.child("location")
         accountRef = database.child("userAccount")
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            todoViewModel.getAllByDate(uid, getCurrentDate()).forEach {
+
+                if(todoMarkerHashMap.containsKey(it.id.toString())) {
+                    todoMarkerHashMap
+                }
+
+                val tempLatlng = LatLng(it.locLatitude, it.locLongitude)
+                setTodoLocationMarker(it.id.toString(), tempLatlng , it.locName, getCurrentAddress(tempLatlng))
+            }
+        }
+
         return binding.root
+    }
+
+    private fun getCurrentDate(): String{
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return formatter.format(Calendar.getInstance().time)
     }
 
     private fun getFriendList() {
@@ -146,7 +167,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
 
                 hash?.forEach {
-                    friendsUid.add(it.value.toString())
+                    friendsUid.add(it.toString())
                 }
 
                 getFriendAccount()
@@ -212,7 +233,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (snapshot.exists()) {
                     Log.d(TAG, "success to load friend's location in DB")
 
-                    if(friendMarkerHashMap.containsKey(uid)) {
+                    if (friendMarkerHashMap.containsKey(uid)) {
                         // 기존의 marker 삭제
                         friendMarkerHashMap[uid]?.remove()
                         // 기존의 marker data 삭제
@@ -284,7 +305,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     hash?.get("latitude") as Double,
                     hash["longitude"] as Double
                 )
-
+                currentLatlng = latlng
                 setUserLocationMarker(latlng, userName, info)
 
             } else {
@@ -324,10 +345,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         // add the marker to map
         currentMarker = map.addMarker(markerOptions)
-
-        // camera update to the default location marker
-        val cameraUpdate = CameraUpdateFactory.newLatLng(latlng)
-        map.moveCamera(cameraUpdate)
     }
 
     // if app can't get location, use the default location(=seoul)
@@ -351,10 +368,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map.moveCamera(cameraUpdate)
     }
 
+    private fun setTodoLocationMarker(id: String, latlng: LatLng, markerTitle: String, markerSnippet: String) {
+
+        // Setting the marker for default location
+        val markerOptions = MarkerOptions()
+        markerOptions.position(latlng)
+        markerOptions.title(markerTitle)
+        markerOptions.snippet(markerSnippet)
+        markerOptions.draggable(true)
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        // add the marker to map
+        todoMarkerHashMap[id] = map.addMarker(markerOptions)!!
+    }
+
     // 위도와 경도를 읽고 Location 의 주소 return for maker's title
     private fun getCurrentAddress(latlng: LatLng): String {
         // 위치 정보와 지역으로부터 주소 문자열을 구한다.
-        var addressList: List<Address>?
+        val addressList: List<Address>?
         val geocoder = Geocoder(context, Locale.getDefault())
         // 지오코더를 이용하여 주소 리스트를 구한다.
         addressList = try {
@@ -384,41 +415,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return addressStringBuilder.toString()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        // Fragment 에서의 OnCreateView 를 마치고, Activity 에서 onCreate()가 호출되고 나서 호출되는 메소드이다.
-        // Activity 와 Fragment 의 뷰가 모두 생성된 상태로, View 를 변경하는 작업이 가능한 단계다.
-        super.onActivityCreated(savedInstanceState)
-        //액티비티가 처음 생성될 때 실행되는 함수
-        MapsInitializer.initialize(context)
-//        locationRequest = LocationRequest()
-//            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY) // 정확도를 최우선적으로 고려
-//            .setInterval(UPDATE_INTERVAL_MS.toLong()) // 위치가 Update 되는 주기
-//            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS.toLong()) // 위치 획득후 업데이트되는 주기
-//        val builder = LocationSettingsRequest.Builder()
-//        builder.addLocationRequest(locationRequest)
-
-        // FusedLocationProviderClient 객체 생성
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         map.let {
             outState.putParcelable(KEY_CAMERA_POSITION, it.cameraPosition)
-            outState.putParcelable(KEY_LOCATION, currentLocation)
+            outState.putParcelable(KEY_LOCATION, currentLatlng)
             super.onSaveInstanceState(outState)
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        MapsInitializer.initialize(context)
+
         map = googleMap
         setDefaultLocationMarker() // location 정보를 얻지 못할 때를 대비해서 default location 에 따라 설정.
         getLocationPermission() // location permission 요청
         updateLocationUI() // activate the user's location
         getUserAccount(currentUser.uid) // generate marker for the user's location in real-time.
         getFriendList() // generate marker for the friends location in real-time.
-
-//        getDeviceLocation() // user's location 에 따라 현재 위치 정보 설정
     }
 
     // if the location permission is granted, activate the user's location.
@@ -433,45 +446,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             } else {
                 map.isMyLocationEnabled = false
                 map.uiSettings.isMyLocationButtonEnabled = false
-                currentLocation = null
+                currentLatlng = null
                 getLocationPermission()
             }
         } catch (e: SecurityException) {
             e.message?.let { Log.e("Exception: %s", it) }
         }
     }
-
-    // location request 에 성공하면 진행되는 프로세스
-//    private var locationCallback: LocationCallback = object : LocationCallback() {
-//        override fun onLocationResult(locationResult: LocationResult) {
-//            super.onLocationResult(locationResult)
-//
-//            // result 를 list 로 받음
-//            val locationList = locationResult.locations
-//
-//            // list 가 비어있지 않다면 location 설정
-//            if (locationList.size > 0) {
-//
-//                // 가장 최신 location 사용
-//                val location = locationList[locationList.size - 1]
-//                val currentPosition = LatLng(location.latitude, location.longitude)
-//                val markerTitle = getCurrentAddress(currentPosition)
-//                val markerSnippet = "위도:" + location.latitude.toString() + " 경도:" + location.longitude.toString()
-//
-//                //현재 위치에 마커 생성하고 이동
-//                setCurrentLocation(location, markerTitle, markerSnippet)
-//                currentLocation = location
-//            }
-//        }
-//    }
-
-//    private fun getDeviceLocation() {
-//        try {
-//            if (locationPermissionGranted) fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
-//        } catch (e: SecurityException) {
-//            Log.e("Exception: %s", e.message!!)
-//        }
-//    }
 
     // Check location permissions
     private fun getLocationPermission() {
@@ -503,15 +484,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         updateLocationUI()
     }
 
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    fun checkLocationServicesStatus(): Boolean {
-//        val locationManager =
-//            requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
-//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-//            LocationManager.NETWORK_PROVIDER
-//        )
-//    }
-
     override fun onStart() { // 유저에게 Fragment 가 보이도록 해준다.
         super.onStart()
         mapView.onStart()
@@ -522,7 +494,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStop()
         mapView.onStop()
         Log.d(TAG, "onStop : removeLocationUpdates")
-//        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() { // 유저에게 Fragment 가 보여지고, 유저와 상호작용이 가능하게 되는 부분
@@ -543,7 +514,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 permissionLauncher.launch(ACCESS_FINE_LOCATION)
                 return
             }
-//            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
             map.isMyLocationEnabled = true
         }
     }
@@ -561,7 +531,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() { // 프래그먼트와 관련된 View 가 제거되는 단계
         super.onDestroyView()
         Log.d(TAG, "onDestroyView : removeLocationUpdates")
-//        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onDestroy() {

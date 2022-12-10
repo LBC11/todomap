@@ -31,10 +31,15 @@ class TodoRepository() {
         }
     }
 
-    suspend fun getAllByDate(uid: String, date: String): LiveData<List<TodoEntity>> {
+    suspend fun getAllByDateLive(uid: String, date: String): LiveData<List<TodoEntity>> {
         updateList(uid, date)
         _todoList.value = _tempList
         return _todoList
+    }
+
+    suspend fun getAllByDate(uid: String, date: String): List<TodoEntity> {
+        updateList(uid, date)
+        return _tempList
     }
 
      private suspend fun updateList(uid: String, date: String) {
