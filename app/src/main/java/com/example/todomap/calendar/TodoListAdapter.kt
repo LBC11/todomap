@@ -6,14 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todomap.databinding.TodoitemRecyclerBinding
 import com.example.todomap.retrofit.model.TodoEntity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFragment): RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
-    private var todoList =  ArrayList<TodoEntity>()
+class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFragment) :
+    RecyclerView.Adapter<TodoListAdapter.ViewHolder>() {
+    private var todoList = ArrayList<TodoEntity>()
     private val TAG = "TodoListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -26,8 +30,8 @@ class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFra
     }
 
     // CalendarFragment에서 todolist 보여줄 때 사용
-    fun setTodoList(todo: List<TodoEntity>?){
-        if (todo != null){
+    fun setTodoList(todo: List<TodoEntity>?) {
+        if (todo != null) {
             todoList.clear()
             todoList.addAll(todo)
         } else {
@@ -35,19 +39,23 @@ class TodoListAdapter(val todoViewModel: TodoViewModel, var context: CalendarFra
         }
     }
 
-    inner class ViewHolder(private val binding: TodoitemRecyclerBinding) : RecyclerView.ViewHolder(binding.root){
-        fun setTodoListUI(todo: TodoEntity){
+    inner class ViewHolder(private val binding: TodoitemRecyclerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun setTodoListUI(todo: TodoEntity) {
             binding.todoDescription.text = todo.description
             binding.alartTimeView.text = todo.time
 //            binding.alartLocationView.text = 위치 이름으로 바꿔줘야 함
 
-            // 뷰모델 넘겨주기 가능 ?
             binding.todoDeleteBtn.setOnClickListener {
                 Log.d(TAG, "${todo.id}")
 
-
-//                todoViewModel.delete(todo.id)
-
+                GlobalScope.launch {
+                    todoViewModel.delete(todo.id)
+                }
+                val index = todoList.indexOf(todo)
+                todoList.remove(todo)
+                notifyItemRemoved(index)
             }
 
         }
