@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todomap.MainActivity
 import com.example.todomap.databinding.FragmentCalendarBinding
 import com.example.todomap.retrofit.model.TodoCreate
 import com.google.firebase.auth.FirebaseAuth
@@ -33,8 +34,10 @@ class CalendarFragment : Fragment() {
     private lateinit var binding : FragmentCalendarBinding
     private val todoViewModel: TodoViewModel by viewModels()
     private lateinit var adapter: TodoListAdapter
+    lateinit var friendsAdapter: FriendsAdapter
 
     private lateinit var firebaseAuth: FirebaseAuth
+
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
@@ -48,10 +51,15 @@ class CalendarFragment : Fragment() {
 
         val recyclerView = binding.todoRecyclerView
         setRecyclerView(recyclerView)
+        val friendRecyclerView = binding.friendRecyclerView
+        setFriendRecyclerView(friendRecyclerView)
+
+        Log.d("Friends", "Calendar ${friendsAdapter.itemCount}")
+
 
         //date LiveDate 변경 감지
         todoViewModel.date.observe(viewLifecycleOwner) {
-            Log.d("date", it.toString())
+            Log.d(TAG, it.toString())
             lifecycleScope.launch {
                 todoViewModel.getAllByDate(uid, it.toString()).observe(viewLifecycleOwner) { todoList ->
                     if (todoList != null) {
@@ -95,7 +103,7 @@ class CalendarFragment : Fragment() {
             val description = binding.todoEditText.text.toString()
             GlobalScope.launch(Dispatchers.IO) {
                 val date = todoViewModel.date.value!!
-                todoViewModel.insert(TodoCreate(uid, date, time, locLatitude , locLongitude , description))
+                todoViewModel.insert(TodoCreate(uid, date, time, locationName, locLatitude , locLongitude , description))
             }
         }
         return binding.root
@@ -107,6 +115,13 @@ class CalendarFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
         todoViewModel.updateDate(dateOfToday)
+    }
+
+    private fun setFriendRecyclerView(recyclerView: RecyclerView){
+        friendsAdapter = FriendsAdapter(this)
+        friendsAdapter.getFriendList()
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        recyclerView.adapter = friendsAdapter
     }
 
     private fun getTodayOfDate(): String {

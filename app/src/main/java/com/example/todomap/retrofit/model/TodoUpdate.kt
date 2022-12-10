@@ -4,6 +4,7 @@ data class TodoUpdate(
     val uid: String,
     val date: String,
     val time: String,
+    val locName: String,
     val locLatitude: Double,
     val locLongitude: Double,
     val description: String

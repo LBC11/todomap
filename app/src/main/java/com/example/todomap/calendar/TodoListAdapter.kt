@@ -12,6 +12,7 @@ class TodoListAdapter(val todoViewModel: TodoViewModel): RecyclerView.Adapter<To
     private val TAG = "TodoListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         val binding = TodoitemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
