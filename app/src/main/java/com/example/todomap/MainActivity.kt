@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import com.example.todomap.calendar.AutocompleteFragment
 import com.example.todomap.calendar.CalendarFragment
 import com.example.todomap.calendar.CalendarFriendFragment
 import com.example.todomap.databinding.ActivityMainBinding
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 fragmentManager.commit{
                     setReorderingAllowed(true)
                     addToBackStack(null)
-                    replace(binding.fragmentContainer.id, CalendarFriendFragment(uid))
+                    replace(binding.fragmentContainer.id, AutocompleteFragment())
                     Log.d(TAG, "AutocompleteFragment")
                 }
             }

@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todomap.MainActivity
 import com.example.todomap.databinding.FragmentCalendarBinding
 import com.example.todomap.retrofit.model.TodoCreate
 import com.example.todomap.retrofit.model.TodoEntity
@@ -40,6 +41,11 @@ class CalendarFragment : Fragment() {
     private var tempList: List<TodoEntity> = arrayListOf()
 
     private lateinit var firebaseAuth: FirebaseAuth
+
+    private val mainActivity : MainActivity
+        get() {
+            return activity as MainActivity
+        }
 
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -106,7 +112,7 @@ class CalendarFragment : Fragment() {
         val locLongitude = 0.0
         val locationName = ""
         binding.setLocaBtn.setOnClickListener {
-
+            mainActivity.changeFragment(6)
         }
 
         binding.todoAddBtn.setOnClickListener {
