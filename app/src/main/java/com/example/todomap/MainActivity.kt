@@ -139,6 +139,14 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "gotoCalendarFriendFragment")
                 }
             }
+            6 ->{
+                fragmentManager.commit{
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                    replace(binding.fragmentContainer.id, CalendarFriendFragment(uid))
+                    Log.d(TAG, "AutocompleteFragment")
+                }
+            }
         }
     }
 
